@@ -1,5 +1,4 @@
 // import { AnnouncementBar } from '@/components/sections/AnnouncementBar/AnnouncementBar'
-import { Navbar } from '@/components/sections/Navbar/Navbar'
 import { Hero } from '@/components/sections/Hero/Hero'
 import { Clients } from '@/components/sections/Clients/Clients'
 // import { Introduction } from '@/components/sections/Introduction/Introduction'
@@ -20,6 +19,7 @@ import { FAQ } from '@/components/sections/FAQ/FAQ'
 import { Contact } from '@/components/sections/Contact/Contact'
 import { Scheduling } from '@/components/sections/Scheduling/Scheduling'
 import { Footer } from '@/components/sections/Footer/Footer'
+import { Navbar } from './components/Navbar'
 
 export function HomePage() {
     return (
