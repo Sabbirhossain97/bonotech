@@ -4,7 +4,6 @@ import { Clients } from '@/components/sections/Clients/Clients'
 import { Comparison } from '@/components/sections/Comparison/Comparison'
 import { FAQ } from '@/components/sections/FAQ/FAQ'
 import { Footer } from '@/components/sections/Footer/Footer'
-import { Hero } from '@/components/sections/Hero/Hero'
 import { Industries } from '@/components/sections/Industries/Industries'
 import { IntroductionSection } from '@/components/sections/IntroductionSection/IntroductionSection'
 import { Navbar } from './components/Navbar'
@@ -14,6 +13,7 @@ import { SpeedSection } from '@/components/sections/SpeedSection/SpeedSection'
 import { Testimonials } from '@/components/sections/Testimonials/Testimonials'
 import { TimelineSection } from '@/components/sections/TimelineSection/TimelineSection'
 import { WhatWeDo } from '@/components/sections/WhatWeDo/WhatWeDo'
+import Hero from './components/Hero/Hero'
 
 export function HomePage() {
     return (
