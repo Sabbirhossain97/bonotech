@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-10 -18 366 382" fill="none">
+  <!-- Adapted from the supplied ai-04.svg. Rounded strokes soften the original tips. -->
+  <defs>
+    <linearGradient id="body" x1="45" y1="40" x2="290" y2="322" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#e5d1ff"/><stop offset=".24" stop-color="#ae7eff"/><stop offset=".47" stop-color="#7736e4"/><stop offset=".7" stop-color="#39146a"/><stop offset="1" stop-color="#a877f2"/>
+    </linearGradient>
+    <linearGradient id="rim" x1="140" y1="28" x2="208" y2="340" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fff4ff"/><stop offset=".31" stop-color="#d8b6ff"/><stop offset=".53" stop-color="#faf3ff"/><stop offset=".74" stop-color="#9f64ef"/><stop offset="1" stop-color="#e2bdff"/>
+    </linearGradient>
+    <radialGradient id="light" cx="0" cy="0" r="1" gradientTransform="translate(147 146) rotate(55) scale(163 148)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#faf0ff" stop-opacity=".6"/><stop offset=".49" stop-color="#b889ff" stop-opacity=".18"/><stop offset="1" stop-color="#5423b0" stop-opacity="0"/>
+    </radialGradient>
+    <path id="star" d="M173.07,342.02l-11.9-37.76c-4.42-14.01-10.09-26.89-17.07-39.74-27.34-50.3-75.98-63.26-127.41-78.36l35.73-10.95c15.95-4.89,30.6-11.68,45.12-19.81,47.33-27.33,60.43-75.26,75.56-125.52l11.48,37.19c3.86,12.51,9,24,14.74,35.71,7.42,13.76,15.75,26.22,27.39,36.7,28.16,25.38,65.95,35.8,102.85,46.66-28.43,8.41-58.41,16.83-83.93,32.52-45.09,27.74-57.75,74.04-72.56,123.35Z"/>
+  </defs>
+  <use href="#star" fill="url(#body)" stroke="url(#body)" stroke-width="6" stroke-linejoin="round"/>
+  <use href="#star" fill="url(#light)" stroke="url(#rim)" stroke-width="2.3" stroke-linejoin="round"/>
+  <path d="M66.12,93.22c-5.39-18.06-10.92-33.7-29.12-40.01l-16.47-5.71c8.87-2.39,17.59-5.19,25.6-10.29,11.81-7.52,15.43-21.03,20.01-34.82,5.33,16.95,9,30.34,26.36,38.69l18.75,6.55-13.98,4.65c-20.3,7.24-25.63,21.31-31.14,40.94Z" fill="url(#body)" stroke="#c19aef" stroke-width="3" stroke-linejoin="round" opacity=".7"/>
+  <circle cx="293.34" cy="320.49" r="22.55" fill="url(#body)" stroke="#b791e5" stroke-width="1.2" opacity=".6"/>
+</svg>

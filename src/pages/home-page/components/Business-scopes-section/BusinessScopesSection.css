@@ -1,0 +1,674 @@
+.business-scopes {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    min-height: 100svh;
+    padding: clamp(80px, 8vh, 110px) 24px clamp(90px, 9vh, 120px);
+    background: linear-gradient(180deg, #1c102e 0%, #6340b1 42%, #7953d2 61%, #2b1748 85%, #08060c 100%);
+}
+
+.business-scopes::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 52%;
+    width: 150%;
+    height: 110%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center, rgba(157, 114, 240, 0.94) 0%, rgba(131, 87, 222, 0.82) 29%, rgba(89, 55, 160, 0.58) 56%, rgba(29, 16, 48, 0.26) 78%, transparent 91%);
+    filter: blur(8px);
+    pointer-events: none;
+}
+
+.business-scopes::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.92) 0%, transparent 9%, transparent 90%, rgba(0, 0, 0, 0.96) 100%);
+    pointer-events: none;
+}
+
+.business-scopes-inner {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.business-scopes-heading {
+    max-width: 1100px;
+    margin: 0 auto 52px;
+    text-align: center;
+}
+
+.business-scopes-eyebrow {
+    margin: 0 0 15px;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: 0.14em;
+    color: #c3b0dc;
+}
+
+.business-scopes-heading h2 {
+    margin: 0;
+    font-size: clamp(40px, 4.7vw, 62px);
+    font-weight: 300;
+    line-height: 1.06;
+    letter-spacing: -0.055em;
+    color: #fff;
+}
+
+.business-scopes-heading h2 span {
+    display: block;
+    margin-top: 7px;
+    font-weight: 700;
+    color: #c8a9ef;
+}
+
+.business-scopes-description {
+    max-width: 680px;
+    margin: 21px auto 0;
+    font-size: 17px;
+    font-weight: 300;
+    line-height: 1.58;
+    letter-spacing: -0.025em;
+    color: #cec2dc;
+}
+
+/* =========================================================
+   MAIN CARD — 1200 × 987
+   ========================================================= */
+
+.business-scopes-grid {
+    position: relative;
+    isolation: isolate;
+    width: 1200px;
+    max-width: 100%;
+    height: 987px;
+    margin: 0 auto;
+    overflow: hidden;
+    border: 1px solid rgba(206, 181, 238, 0.21);
+    border-radius: 5px;
+    background: #08060d;
+    box-shadow: 0 18px 72px rgba(5, 0, 13, 0.18);
+}
+
+/* =========================================================
+   ART LAYER
+   Always BELOW cards
+   ========================================================= */
+
+.business-scopes-art {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.business-scopes-halo {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 670px;
+    height: 780px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center, rgba(111, 44, 204, 0.46) 0%, rgba(91, 35, 168, 0.18) 43%, transparent 72%);
+    animation: business-scopes-halo 7s ease-in-out infinite;
+}
+
+/* =========================================================
+   TOP SMALL STAR — 161 × 165
+
+   Centered exactly on x = 512px.
+
+   Top-left card ends at x = 512px.
+   Because the card has higher z-index, the left half
+   of this star is hidden beneath that card.
+   ========================================================= */
+
+.business-scopes-top-star {
+    position: absolute;
+    left: 512px;
+    top: 91px;
+    width: 161px;
+    height: 165px;
+    transform: translateX(-50%);
+    filter: drop-shadow(0 0 18px rgba(173, 115, 246, 0.34));
+}
+
+.business-scopes-top-star::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #351743 0%, #c18cf9 48%, #6b3587 100%);
+    clip-path: polygon(50% 0%,
+            61% 38%,
+            100% 50%,
+            61% 62%,
+            50% 100%,
+            39% 62%,
+            0% 50%,
+            39% 38%);
+}
+
+.business-scopes-top-star::after {
+    content: "";
+    position: absolute;
+    inset: 18%;
+    background: rgba(217, 175, 255, 0.38);
+    filter: blur(16px);
+    clip-path: polygon(50% 0%,
+            61% 38%,
+            100% 50%,
+            61% 62%,
+            50% 100%,
+            39% 62%,
+            0% 50%,
+            39% 38%);
+}
+
+/* =========================================================
+   MAIN STAR — 557 × 568
+   ========================================================= */
+
+.business-scopes-main-star {
+    position: absolute;
+    left: 50%;
+    top: 49.7%;
+    width: 557px;
+    height: 568px;
+    transform: translate(-50%, -50%);
+}
+
+.business-scopes-main-star::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: url("@/assets/ways-in/ai-star.svg") center / contain no-repeat;
+    opacity: 0.46;
+    filter: blur(28px) brightness(1.45);
+    animation: business-scopes-star-glow 7s ease-in-out infinite;
+}
+
+.business-scopes-main-star img {
+    position: relative;
+    z-index: 2;
+    display: block;
+    width: 557px;
+    height: 568px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 9px rgba(193, 143, 255, 0.78)) drop-shadow(0 0 28px rgba(136, 62, 248, 0.5));
+    animation: business-scopes-star-breathe 7s ease-in-out infinite;
+}
+
+/* =========================================================
+   BOTTOM CIRCLE — 92 × 94
+
+   Right-hand center boundary is x = 688px.
+
+   Circle centered on x = 688px means:
+   - left half remains visible in the center column
+   - right half is beneath bottom-right card
+   ========================================================= */
+
+.business-scopes-bottom-circle {
+    position: absolute;
+    left: 688px;
+    top: 756px;
+    width: 92px;
+    height: 94px;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background: linear-gradient(145deg, #ad72f2 0%, #7d43c9 100%);
+    box-shadow: inset 0 0 0 1px rgba(226, 198, 255, 0.26), 0 0 25px rgba(157, 92, 239, 0.3);
+}
+
+/* =========================================================
+   CORNER CARDS — 512 × 365
+
+   z-index is higher than decorative artwork,
+   which produces the clipping effect.
+   ========================================================= */
+
+.business-scope-card {
+    position: absolute;
+    z-index: 3;
+    width: 512px;
+    height: 365px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 28px;
+    padding: 78px 43px 40px;
+    overflow: hidden;
+}
+
+/*
+  Important:
+  keep card backgrounds opaque.
+  Otherwise you would still see the star/circle beneath them.
+*/
+
+.business-scope-idea {
+    left: 0;
+    top: 0;
+    background: linear-gradient(135deg, #08060d 0%, #0d0915 100%);
+}
+
+.business-scope-build {
+    top: 0;
+    right: 0;
+    background: linear-gradient(225deg, #08060d 0%, #0d0915 100%);
+}
+
+.business-scope-consult {
+    left: 0;
+    bottom: 0;
+    padding-top: 76px;
+    background: linear-gradient(45deg, #08060d 0%, #0d0915 100%);
+}
+
+.business-scope-digitize {
+    right: 0;
+    bottom: 0;
+    padding-top: 61px;
+    background: linear-gradient(315deg, #08060d 0%, #0d0915 100%);
+}
+
+.business-scope-card h3 {
+    margin: 0;
+    max-width: 425px;
+    font-size: 31px;
+    font-weight: 300;
+    line-height: 1.22;
+    letter-spacing: -0.047em;
+    color: #f7f0ff;
+}
+
+.business-scope-card p {
+    margin: 0;
+    max-width: 435px;
+    font-size: 17px;
+    font-weight: 300;
+    line-height: 1.64;
+    letter-spacing: -0.024em;
+    color: #bdb1cb;
+}
+
+/* =========================================================
+   GRID LINES
+   ========================================================= */
+
+.business-scopes-grid-lines {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    pointer-events: none;
+}
+
+.business-scopes-grid-lines i {
+    position: absolute;
+    display: block;
+    background: rgba(202, 176, 236, 0.17);
+}
+
+.business-scopes-grid-lines i:nth-child(1) {
+    top: 0;
+    bottom: 0;
+    left: 512px;
+    width: 1px;
+}
+
+.business-scopes-grid-lines i:nth-child(2) {
+    top: 0;
+    bottom: 0;
+    left: 688px;
+    width: 1px;
+}
+
+.business-scopes-grid-lines i:nth-child(3) {
+    left: 0;
+    right: 0;
+    top: 622px;
+    height: 1px;
+}
+
+/* =========================================================
+   CENTER CARD — 410 × 203
+   ========================================================= */
+
+.business-scopes-notification {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 8;
+    width: 410px;
+    height: 203px;
+    transform: translate(-50%, -50%);
+    padding: 26px 27px 24px;
+    border: 1px solid rgba(238, 225, 255, 0.43);
+    border-radius: 5px;
+    background: linear-gradient(135deg, rgba(235, 218, 255, 0.19) 0%, rgba(177, 132, 230, 0.1) 42%, rgba(30, 13, 51, 0.42) 100%), rgba(37, 18, 64, 0.87);
+    backdrop-filter: blur(27px) saturate(1.3);
+    -webkit-backdrop-filter: blur(27px) saturate(1.3);
+    box-shadow: inset 0 1px 0 rgba(255, 247, 255, 0.25), inset 0 -1px 0 rgba(221, 195, 249, 0.08), 0 14px 50px rgba(7, 2, 15, 0.38);
+}
+
+.business-scopes-notification-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 19px;
+    font-size: 10px;
+    line-height: 1;
+    letter-spacing: 0.16em;
+    color: #e2cff8;
+}
+
+.business-scopes-notification-mark {
+    font-size: 20px;
+    line-height: 1;
+    color: #f8edff;
+}
+
+.business-scopes-notification-signal {
+    width: 5px;
+    height: 5px;
+    margin-left: auto;
+    border-radius: 50%;
+    background: #dfc1ff;
+    box-shadow: 0 0 9px #c18aff;
+}
+
+.business-scopes-notification p {
+    margin: 0;
+    font-size: 27px;
+    font-weight: 300;
+    line-height: 1.36;
+    letter-spacing: -0.043em;
+    color: #fffaff;
+}
+
+/* =========================================================
+   ANIMATION
+   ========================================================= */
+
+.business-scopes-grid:not(.is-visible) .business-scopes-halo,
+.business-scopes-grid:not(.is-visible) .business-scopes-main-star img,
+.business-scopes-grid:not(.is-visible) .business-scopes-main-star::before {
+    animation-play-state: paused;
+}
+
+@keyframes business-scopes-star-breathe {
+
+    0%,
+    100% {
+        transform: scale(0.988);
+    }
+
+    50% {
+        transform: scale(1.012);
+    }
+}
+
+@keyframes business-scopes-star-glow {
+
+    0%,
+    100% {
+        opacity: 0.4;
+        transform: scale(0.985);
+    }
+
+    50% {
+        opacity: 0.7;
+        transform: scale(1.025);
+    }
+}
+
+@keyframes business-scopes-halo {
+
+    0%,
+    100% {
+        opacity: 0.58;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1024px) {
+    .business-scopes-heading {
+        margin-bottom: 42px;
+    }
+
+    .business-scopes-grid {
+        width: 100%;
+        height: auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .business-scope-card {
+        position: relative;
+        inset: auto;
+        width: 100%;
+        height: auto;
+        min-height: 350px;
+        padding: 48px 34px;
+    }
+
+    .business-scope-card h3 {
+        font-size: 26px;
+    }
+
+    .business-scope-card p {
+        font-size: 15px;
+    }
+
+    .business-scope-idea {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    .business-scope-build {
+        grid-column: 2;
+        grid-row: 1;
+    }
+
+    .business-scopes-art {
+        position: relative;
+        grid-column: 1 / 3;
+        grid-row: 2;
+        height: 520px;
+    }
+
+    .business-scope-consult {
+        grid-column: 1;
+        grid-row: 3;
+    }
+
+    .business-scope-digitize {
+        grid-column: 2;
+        grid-row: 3;
+    }
+
+    .business-scopes-main-star {
+        left: 50%;
+        top: 50%;
+        width: 510px;
+        height: 520px;
+    }
+
+    .business-scopes-main-star img {
+        width: 510px;
+        height: 520px;
+    }
+
+    .business-scopes-top-star {
+        left: 32%;
+        top: 36px;
+        width: 135px;
+        height: 138px;
+    }
+
+    .business-scopes-bottom-circle {
+        left: 68%;
+        top: auto;
+        bottom: 38px;
+        width: 82px;
+        height: 84px;
+    }
+
+    .business-scopes-grid-lines {
+        display: none;
+    }
+
+    .business-scopes-notification {
+        top: 525px;
+        width: 380px;
+        height: auto;
+        min-height: 190px;
+    }
+
+    .business-scopes-notification p {
+        font-size: 25px;
+    }
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+    .business-scopes {
+        padding: 72px 18px 78px;
+    }
+
+    .business-scopes-heading {
+        margin-bottom: 36px;
+    }
+
+    .business-scopes-heading h2 {
+        font-size: clamp(35px, 10vw, 46px);
+    }
+
+    .business-scopes-heading h2 span {
+        margin-top: 7px;
+    }
+
+    .business-scopes-description {
+        margin-top: 21px;
+        font-size: 16px;
+    }
+
+    .business-scopes-description br {
+        display: none;
+    }
+
+    .business-scopes-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        max-width: 560px;
+    }
+
+    .business-scope-card {
+        grid-column: 1;
+        width: 100%;
+        min-height: auto;
+        padding: 34px 26px 38px;
+        gap: 19px;
+    }
+
+    .business-scope-card h3 {
+        max-width: none;
+        font-size: 25px;
+    }
+
+    .business-scope-card p {
+        max-width: none;
+        font-size: 16px;
+        line-height: 1.6;
+    }
+
+    .business-scope-idea {
+        grid-row: 1;
+    }
+
+    .business-scope-build {
+        grid-row: 2;
+    }
+
+    .business-scopes-art {
+        grid-column: 1;
+        grid-row: 3;
+        height: 430px;
+    }
+
+    .business-scope-consult {
+        grid-row: 4;
+    }
+
+    .business-scope-digitize {
+        grid-row: 5;
+    }
+
+    .business-scopes-main-star {
+        width: 440px;
+        height: 450px;
+    }
+
+    .business-scopes-main-star img {
+        width: 440px;
+        height: 450px;
+    }
+
+    .business-scopes-top-star {
+        left: 24%;
+        top: 30px;
+        width: 110px;
+        height: 113px;
+    }
+
+    .business-scopes-bottom-circle {
+        left: 77%;
+        top: auto;
+        bottom: 30px;
+        width: 70px;
+        height: 72px;
+    }
+
+    .business-scopes-notification {
+        top: auto;
+        left: 50%;
+        bottom: calc(50% - 90px);
+        width: calc(100% - 48px);
+        max-width: 360px;
+        height: auto;
+        min-height: 180px;
+        transform: translateX(-50%);
+        padding: 22px;
+    }
+
+    .business-scopes-notification p {
+        font-size: 22px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .business-scopes-halo,
+    .business-scopes-main-star img,
+    .business-scopes-main-star::before {
+        animation: none !important;
+    }
+}

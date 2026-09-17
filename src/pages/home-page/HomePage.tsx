@@ -1,6 +1,5 @@
 import { AiApproach } from '@/components/sections/AiApproach/AiApproach'
 import { BonoExperienceSection } from '@/components/sections/BonoExperienceSection/BonoExperienceSection'
-import { Comparison } from '@/components/sections/Comparison/Comparison'
 import { FAQ } from '@/components/sections/FAQ/FAQ'
 import { Footer } from '@/components/sections/Footer/Footer'
 import { Industries } from '@/components/sections/Industries/Industries'
@@ -10,10 +9,11 @@ import { Scheduling } from '@/components/sections/Scheduling/Scheduling'
 import { SpeedSection } from '@/components/sections/SpeedSection/SpeedSection'
 import { Testimonials } from '@/components/sections/Testimonials/Testimonials'
 import { TimelineSection } from '@/components/sections/TimelineSection/TimelineSection'
-import { WhatWeDo } from '@/components/sections/WhatWeDo/WhatWeDo'
 import Hero from './components/Hero/Hero'
 import SprintMetricsSection from './components/SprintMetricsSection'
 import ClientShowcaseSection from './components/client-showcase-section/ClientShowcaseSection'
+import AboutImpactSection from './components/AboutImpactSection'
+import BusinessScopesSection from './components/Business-scopes-section/BusinessScopesSection'
 
 export function HomePage() {
     return (
@@ -22,8 +22,8 @@ export function HomePage() {
             <Hero />
             <SprintMetricsSection />
             <ClientShowcaseSection />
-            <Comparison />
-            <WhatWeDo />
+            <AboutImpactSection />
+            <BusinessScopesSection />
             <AiApproach />
             <TimelineSection />
             <SpeedSection />
