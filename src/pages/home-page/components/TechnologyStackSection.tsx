@@ -21,7 +21,7 @@ import iosLogo from "@/assets/technology/ios.svg";
 import wordpressLogo from "@/assets/technology/wordpress.svg";
 import webflowLogo from "@/assets/technology/webflow.svg";
 import angularLogo from "@/assets/technology/angular.svg";
-import bonotechMark from "@/assets/technology/bonotech-mark.svg";
+import bonotechMark from "@/assets/technology/bonotech-mark.png";
 
 type Technology = {
     name: string;
