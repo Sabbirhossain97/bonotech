@@ -378,7 +378,7 @@ export default function FlowBackground({
                 style={{
                     display: "block",
                     width: "100%",
-                    height: "90%",
+                    height: "100%",
                 }}
             />
         </div>
