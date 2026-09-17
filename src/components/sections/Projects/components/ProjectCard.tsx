@@ -1,11 +1,11 @@
-import { ArrowRight, Calendar } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { ProjectCardProps } from '../Projects.types'
 
 import playStoreImg from '@/assets/playstore.png'
 import appStoreImg from '@/assets/apple-store.png'
 
-const DEFAULT_BULLET_COLOR = '#8269CF'
+// const DEFAULT_BULLET_COLOR = '#8269CF'
 
 function logoClampSize(px: number) {
     return `clamp(${(px * 0.5).toFixed(1)}px, ${(px / 1280 * 100).toFixed(2)}vw, ${px}px)`
@@ -59,7 +59,7 @@ function BuildDaysIcon() {
 }
 
 export function ProjectCard({ project }: ProjectCardProps) {
-    const bulletColor = project.bulletColor ?? DEFAULT_BULLET_COLOR
+    // const bulletColor = project.bulletColor ?? DEFAULT_BULLET_COLOR
     const hasStoreBadges = !!(project.playStoreHref || project.appStoreHref)
 
     const learnMoreDesktop = project.learnMoreHref ? (

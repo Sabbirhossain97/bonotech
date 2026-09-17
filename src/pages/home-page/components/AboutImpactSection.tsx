@@ -13,7 +13,7 @@ type VideoCardProps = {
 };
 
 const VideoControl = ({
-    videoRef,
+    // videoRef,
     isPaused,
     onToggle,
     label,
