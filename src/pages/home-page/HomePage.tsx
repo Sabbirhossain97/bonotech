@@ -1,4 +1,3 @@
-import { AiApproach } from '@/components/sections/AiApproach/AiApproach'
 import { BonoExperienceSection } from '@/components/sections/BonoExperienceSection/BonoExperienceSection'
 import { FAQ } from '@/components/sections/FAQ/FAQ'
 import { Footer } from '@/components/sections/Footer/Footer'
@@ -14,6 +13,7 @@ import SprintMetricsSection from './components/SprintMetricsSection'
 import ClientShowcaseSection from './components/client-showcase-section/ClientShowcaseSection'
 import AboutImpactSection from './components/AboutImpactSection'
 import BusinessScopesSection from './components/Business-scopes-section/BusinessScopesSection'
+import DeliveryTimesSection from './components/DeliveryTimesSection'
 
 export function HomePage() {
     return (
@@ -24,7 +24,7 @@ export function HomePage() {
             <ClientShowcaseSection />
             <AboutImpactSection />
             <BusinessScopesSection />
-            <AiApproach />
+            <DeliveryTimesSection />
             <TimelineSection />
             <SpeedSection />
             <Projects />
