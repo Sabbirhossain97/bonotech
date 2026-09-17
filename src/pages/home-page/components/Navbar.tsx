@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom'
 import { ArrowRight, X } from 'lucide-react'
 import { handleHashLinkClick } from '@/lib/scroll'
 import { cn } from '@/lib/utils'
-import bonotechLogo from '@/assets/bonotech-logo-mono.png'
+import bonotechLogo from '@/assets/bonotech-logo-mono2.png'
 import menuIcon from '@/assets/icons/menu-line-horizontal.svg'
 
 export interface NavLink {
@@ -87,7 +87,7 @@ export function Navbar({ links = DEFAULT_LINKS }: NavbarProps) {
                         isScrolled ? "h-[80px]" : "h-[104px]"
                     )}
                 >
-                    <a href="/" className="shrink-0 relative z-[60]" aria-label="Bonotech Home">
+                    <a href="/" className="shrink-0 max-w-[225px] w-full h-[32px] relative z-[60]" aria-label="Bonotech Home">
                         <img
                             src={bonotechLogo}
                             alt="Bonotech"

@@ -1,6 +1,5 @@
 import { AiApproach } from '@/components/sections/AiApproach/AiApproach'
 import { BonoExperienceSection } from '@/components/sections/BonoExperienceSection/BonoExperienceSection'
-import { Clients } from '@/components/sections/Clients/Clients'
 import { Comparison } from '@/components/sections/Comparison/Comparison'
 import { FAQ } from '@/components/sections/FAQ/FAQ'
 import { Footer } from '@/components/sections/Footer/Footer'
@@ -14,13 +13,14 @@ import { Testimonials } from '@/components/sections/Testimonials/Testimonials'
 import { TimelineSection } from '@/components/sections/TimelineSection/TimelineSection'
 import { WhatWeDo } from '@/components/sections/WhatWeDo/WhatWeDo'
 import Hero from './components/Hero/Hero'
+import SprintMetricsSection from './components/SprintMetricsSection'
 
 export function HomePage() {
     return (
         <>
             <Navbar />
             <Hero />
-            <Clients />
+            <SprintMetricsSection />
             <IntroductionSection />
             <Comparison />
             <WhatWeDo />
