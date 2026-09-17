@@ -18,12 +18,11 @@ export interface NavbarProps {
 
 
 const DEFAULT_LINKS: NavLink[] = [
-    { label: 'About', href: '#introduction' },
-    { label: 'Services', href: '#what-we-do' },
-    { label: 'Portfolio', href: '#projects' },
-    { label: 'Bono-Xperience', href: '#experience' },
+    { label: 'About', href: '#' },
+    { label: 'Clients', href: '#' },
+    { label: 'Services', href: '#' },
+    { label: 'Portfolio', href: '#' },
     { label: 'Testimonials', href: '#testimonials' },
-    { label: 'FAQs', href: '#faq' },
 ]
 
 export function Navbar({ links = DEFAULT_LINKS }: NavbarProps) {
@@ -91,7 +90,7 @@ export function Navbar({ links = DEFAULT_LINKS }: NavbarProps) {
                         <img
                             src={bonotechLogo}
                             alt="Bonotech"
-                            className="h-10 w-auto"
+                            className="h-auto w-auto"
                         />
                     </a>
 
