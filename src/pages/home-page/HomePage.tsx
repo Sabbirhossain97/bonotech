@@ -7,13 +7,13 @@ import { Projects } from '@/components/sections/Projects/Projects'
 import { Scheduling } from '@/components/sections/Scheduling/Scheduling'
 import { SpeedSection } from '@/components/sections/SpeedSection/SpeedSection'
 import { Testimonials } from '@/components/sections/Testimonials/Testimonials'
-import { TimelineSection } from '@/components/sections/TimelineSection/TimelineSection'
 import Hero from './components/Hero/Hero'
 import SprintMetricsSection from './components/SprintMetricsSection'
 import ClientShowcaseSection from './components/client-showcase-section/ClientShowcaseSection'
 import AboutImpactSection from './components/AboutImpactSection'
 import BusinessScopesSection from './components/Business-scopes-section/BusinessScopesSection'
 import DeliveryTimesSection from './components/DeliveryTimesSection'
+import TechnologyStackSection from './components/TechnologyStackSection'
 
 export function HomePage() {
     return (
@@ -25,7 +25,7 @@ export function HomePage() {
             <AboutImpactSection />
             <BusinessScopesSection />
             <DeliveryTimesSection />
-            <TimelineSection />
+            <TechnologyStackSection />
             <SpeedSection />
             <Projects />
             <Industries />
