@@ -46,7 +46,7 @@ const SprintMetricsSection = () => {
     }, [reducedMotion]);
 
     return (
-        <section ref={sectionRef} id="sprint-numbers" aria-labelledby="sprint-metrics-title" className="relative overflow-hidden bg-[#1C102E] px-5 py-20 sm:px-6 sm:py-24 lg:px-8 lg:py-[110px]">
+        <section ref={sectionRef} id="sprint-numbers" aria-labelledby="sprint-metrics-title" className="relative overflow-hidden bg-[#12091D] px-5 py-20 sm:px-6 sm:py-24 lg:px-8 lg:py-[110px]">
             <div className="mx-auto w-full max-w-[1200px]">
                 <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 lg:grid-rows-[180px_177px_200px_180px] lg:gap-5">
                     {/* Heading */}
