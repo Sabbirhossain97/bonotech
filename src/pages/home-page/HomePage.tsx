@@ -14,15 +14,17 @@ export function HomePage() {
     return (
         <>
             <Navbar />
-            <Hero />
-            <SprintMetricsSection />
-            <ClientShowcaseSection />
-            <AboutImpactSection />
-            <BusinessScopesSection />
-            <DeliveryTimesSection />
-            <TechnologyStackSection />
-            <TestimonialsSection />
-            <DiscoveryCallSection />
+            <main className="home-page-background">
+                <Hero />
+                <SprintMetricsSection />
+                <ClientShowcaseSection />
+                <AboutImpactSection />
+                <BusinessScopesSection />
+                <DeliveryTimesSection />
+                <TechnologyStackSection />
+                <TestimonialsSection />
+                <DiscoveryCallSection />
+            </main>
             <Footer />
         </>
     )

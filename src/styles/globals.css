@@ -1,6 +1,11 @@
 @import "tailwindcss";
 
 :root {
+    /* Homepage section boundaries */
+    --home-section-seam: #12081e;
+    --home-section-seam-transparent: rgb(18 8 30 / 0%);
+    --home-section-edge-height: clamp(120px, 14vw, 180px);
+
     /* Primitives */
     --color-neutral-0: #FFFFFF;
     --color-neutral-1: #F2F3F4;
@@ -270,4 +275,27 @@ body {
 .schedule-calendly-host .calendly-inline-widget iframe {
     display: block;
     border: 0;
+}
+
+.home-page-background {
+    background: var(--home-section-seam);
+}
+
+.home-section-edge {
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    height: var(--home-section-edge-height);
+    pointer-events: none;
+}
+
+.home-section-edge--top {
+    top: 0;
+    background: linear-gradient(180deg, var(--home-section-seam) 0%, var(--home-section-seam-transparent) 100%);
+}
+
+.home-section-edge--bottom {
+    bottom: 0;
+    background: linear-gradient(0deg, var(--home-section-seam) 0%, var(--home-section-seam-transparent) 100%);
 }

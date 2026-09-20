@@ -11,6 +11,7 @@ import nafisAbrar from "@/assets/testimonials/nafis-abrar.png";
 import sultanMoni from "@/assets/testimonials/sultan-moni-new.png";
 import shohiduzzamanShakil from "@/assets/testimonials/shohiduzzaman-shakil.png";
 import rakibulHasanRaihan from "@/assets/testimonials/rakibul-hasan-raihan.png";
+import SectionEdgeFade from "./SectionEdgeFade";
 
 type Testimonial = {
     name: string;
@@ -223,6 +224,7 @@ const TestimonialsSection = () => {
             aria-labelledby="testimonials-title"
             className="relative isolate flex min-h-screen flex-col items-center justify-center gap-8 overflow-hidden bg-[#12081e] px-5 py-14 text-white sm:px-6 lg:gap-10 lg:px-8 lg:py-16"
         >
+            <SectionEdgeFade />
             {/* Purple wave atmosphere */}
             <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-20 bg-[linear-gradient(180deg,#12081e_0%,#27123f_30%,#53239a_58%,#652cd8_68%,#24103d_84%,#12081e_100%)] [mask-image:linear-gradient(180deg,transparent_0%,transparent_8%,black_36%,black_82%,transparent_100%)] [-webkit-mask-image:linear-gradient(180deg,transparent_0%,transparent_8%,black_36%,black_82%,transparent_100%)]" />
 

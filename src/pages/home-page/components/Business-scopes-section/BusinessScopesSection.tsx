@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react";
 import "./BusinessScopesSection.css";
 
 import aiStar from "@/assets/ways-in/ai-star.svg";
+import SectionEdgeFade from "../SectionEdgeFade";
 
 const BusinessScopesSection = () => {
     const gridRef = useRef<HTMLDivElement | null>(null);
@@ -37,6 +38,7 @@ const BusinessScopesSection = () => {
             className="business-scopes"
             aria-labelledby="business-scopes-title"
         >
+            <SectionEdgeFade />
             <div className="business-scopes-inner">
                 <header className="business-scopes-heading">
                     <p className="business-scopes-eyebrow">

@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import websiteVideo from "@/assets/delivery/website-background.mp4";
 import appVideo from "@/assets/delivery/mobile-september-background.mp4";
 import enterpriseVideo from "@/assets/delivery/enterprise-updated-background.mp4";
+import SectionEdgeFade from "./SectionEdgeFade";
 
 type DeliveryItem = {
     id: number;
@@ -185,11 +186,9 @@ const DeliveryTimesSection = () => {
 
             <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-20 bg-[radial-gradient(ellipse_at_50%_48%,rgba(91,56,139,0.30)_0%,rgba(57,34,85,0.20)_38%,rgba(25,15,39,0.08)_63%,transparent_80%)]" />
 
-            <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[160px] bg-gradient-to-b from-[#0a0710] via-[#0f0919]/90 to-transparent" />
+            <SectionEdgeFade />
 
-            <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-[170px] bg-gradient-to-t from-[#0a0710] via-[#0f0919]/85 to-transparent" />
-
-            <div className="mx-auto w-full max-w-[1200px]">
+            <div className="relative z-10 mx-auto w-full max-w-[1200px]">
                 {/* Heading */}
                 <header className="mx-auto mb-[34px] max-w-[650px] text-center sm:mb-10 lg:mb-[38px]">
                     <p className="mb-3 text-[10px] font-medium uppercase tracking-[0.18em] text-[#a994bd] sm:text-[11px]">

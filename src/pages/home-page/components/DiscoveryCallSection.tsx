@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import type { FormEventHandler } from "react";
+import SectionEdgeFade from "./SectionEdgeFade";
 
 type FormValues = {
     fullName: string;
@@ -124,17 +125,9 @@ const DiscoveryCallSection = () => {
                     className="pointer-events-none absolute left-1/2 top-[50%] -z-20 h-[105%] w-[135%] -translate-x-1/2 -translate-y-1/2 rounded-[50%] bg-[radial-gradient(ellipse_at_center,rgba(96,39,164,0.26)_0%,rgba(65,27,111,0.15)_38%,rgba(31,15,49,0.05)_62%,transparent_82%)] blur-[60px]"
                 />
 
-                <div
-                    aria-hidden="true"
-                    className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[150px] bg-gradient-to-b from-[#09060E] via-[#0D0714]/80 to-transparent"
-                />
+                <SectionEdgeFade />
 
-                <div
-                    aria-hidden="true"
-                    className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-[160px] bg-gradient-to-t from-[#09060E] via-[#0D0714]/70 to-transparent"
-                />
-
-                <div className="mx-auto w-full max-w-[1200px]">
+                <div className="relative z-10 mx-auto w-full max-w-[1200px]">
                     {/* Heading */}
                     <header className="mx-auto mb-10 max-w-[850px] text-center sm:mb-12">
                         <p className="mb-4 text-[11px] font-medium uppercase tracking-[0.16em] text-[#A995BB] sm:text-xs">
