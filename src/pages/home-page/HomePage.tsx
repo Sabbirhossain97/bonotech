@@ -6,9 +6,9 @@ import BusinessScopesSection from './components/Business-scopes-section/Business
 import DeliveryTimesSection from './components/DeliveryTimesSection'
 import TechnologyStackSection from './components/TechnologyStackSection'
 import TestimonialsSection from './components/TestimonialsSection'
-import Footer from '@/components/sections/Footer/Footer'
 import DiscoveryCallSection from './components/DiscoveryCallSection'
 import { Navbar } from '@/shared/Navbar'
+import Footer from '@/shared/Footer/Footer'
 
 export function HomePage() {
     return (

@@ -1,4 +1,4 @@
-import bonotechLogo from "@/assets/bonotech-logo.svg";
+import bonotechLogo from "@/assets/bonotech-logo2.svg";
 
 const Footer = () => {
     const currentYear = new Date().getFullYear();
@@ -76,19 +76,19 @@ const Footer = () => {
                         <ul className="flex list-none flex-col items-start gap-[15px] p-0">
                             <li>
                                 <a
-                                    href="#about-bonotech"
+                                    href="#sprint-numbers"
                                     className="text-[12px] leading-[1.6] tracking-[-0.025em] text-[#CBB9DB] transition-colors hover:text-[#FFF3FF]"
                                 >
-                                    About Bonotech
+                                    About
                                 </a>
                             </li>
 
                             <li>
                                 <a
-                                    href="#business-scopes"
+                                    href="#our-clients"
                                     className="text-[12px] leading-[1.6] tracking-[-0.025em] text-[#CBB9DB] transition-colors hover:text-[#FFF3FF]"
                                 >
-                                    Our Service Scope
+                                    Products
                                 </a>
                             </li>
 
@@ -97,16 +97,7 @@ const Footer = () => {
                                     href="#delivery-times"
                                     className="text-[12px] leading-[1.6] tracking-[-0.025em] text-[#CBB9DB] transition-colors hover:text-[#FFF3FF]"
                                 >
-                                    Average Delivery Times
-                                </a>
-                            </li>
-
-                            <li>
-                                <a
-                                    href="#our-technology"
-                                    className="text-[12px] leading-[1.6] tracking-[-0.025em] text-[#CBB9DB] transition-colors hover:text-[#FFF3FF]"
-                                >
-                                    Our Technology
+                                    Services
                                 </a>
                             </li>
 
@@ -115,22 +106,7 @@ const Footer = () => {
                                     href="#client-testimonials"
                                     className="text-[12px] leading-[1.6] tracking-[-0.025em] text-[#CBB9DB] transition-colors hover:text-[#FFF3FF]"
                                 >
-                                    Client Testimonials
-                                </a>
-                            </li>
-
-                            <li>
-                                <a
-                                    href="#discovery-call"
-                                    className="group inline-flex items-center text-[12px] font-semibold leading-[1.6] tracking-[-0.025em] text-[#E0BAFF] transition-colors hover:text-white"
-                                >
-                                    Book a Discovery Call
-                                    <span
-                                        aria-hidden="true"
-                                        className="ml-1 transition-transform duration-300 group-hover:translate-x-[2px] group-hover:-translate-y-[2px]"
-                                    >
-                                        ↗
-                                    </span>
+                                    Testimonials
                                 </a>
                             </li>
                         </ul>
