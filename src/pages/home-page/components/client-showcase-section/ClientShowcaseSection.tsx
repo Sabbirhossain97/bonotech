@@ -21,8 +21,12 @@ type Client = {
 type Movement = {
     from: number;
     to: number;
-    start: number;
+    elapsed: number;
 };
+
+const AUTO_ADVANCE_SECONDS = 5.5;
+const MANUAL_MOVE_MS = 950;
+const MAX_FRAME_DELTA_SECONDS = 0.06;
 
 const clients: Client[] = [
     {
@@ -208,7 +212,7 @@ const ClientShowcaseSection = () => {
             movementRef.current = {
                 from: phaseRef.current,
                 to: destination,
-                start: performance.now(),
+                elapsed: 0,
             };
         };
 
@@ -222,6 +226,7 @@ const ClientShowcaseSection = () => {
 
         const handleToggle = () => {
             userPausedRef.current = !userPausedRef.current;
+            lastRef.current = performance.now();
             syncPause();
         };
 
@@ -233,6 +238,7 @@ const ClientShowcaseSection = () => {
 
         const handlePointerLeave = () => {
             hoveredRef.current = false;
+            lastRef.current = performance.now();
         };
 
         const handleFocusIn = () => {
@@ -241,6 +247,7 @@ const ClientShowcaseSection = () => {
 
         const handleFocusOut = (event: FocusEvent) => {
             focusedRef.current = controls.contains(event.relatedTarget as Node);
+            lastRef.current = performance.now();
         };
 
         const handleKeyDown = (event: KeyboardEvent) => {
@@ -259,7 +266,12 @@ const ClientShowcaseSection = () => {
                 movementRef.current = null;
             }
 
+            lastRef.current = performance.now();
             render();
+        };
+
+        const handleVisibilityChange = () => {
+            lastRef.current = performance.now();
         };
 
         let intersectionObserver: IntersectionObserver | null = null;
@@ -268,6 +280,7 @@ const ClientShowcaseSection = () => {
             intersectionObserver = new IntersectionObserver(
                 ([entry]) => {
                     visibleRef.current = entry.isIntersecting;
+                    lastRef.current = performance.now();
                 },
                 {
                     threshold: 0.01,
@@ -286,21 +299,23 @@ const ClientShowcaseSection = () => {
         const tick = (now: number) => {
             frameRef.current = requestAnimationFrame(tick);
 
+            const previous = lastRef.current;
+            lastRef.current = now;
+
             if (document.hidden || !visibleRef.current) {
-                lastRef.current = now;
                 return;
             }
 
-            if (now - lastRef.current < 1000 / 30) return;
-
-            const dt = Math.min((now - lastRef.current) / 1000, 0.06);
-
-            lastRef.current = now;
+            const dt = previous
+                ? Math.min((now - previous) / 1000, MAX_FRAME_DELTA_SECONDS)
+                : 0;
 
             const movement = movementRef.current;
 
             if (movement) {
-                const t = Math.min((now - movement.start) / 950, 1);
+                movement.elapsed += dt * 1000;
+
+                const t = Math.min(movement.elapsed / MANUAL_MOVE_MS, 1);
 
                 const ease =
                     t < 0.5
@@ -311,6 +326,8 @@ const ClientShowcaseSection = () => {
                     movement.from + (movement.to - movement.from) * ease;
 
                 if (t === 1) {
+                    phaseRef.current =
+                        ((movement.to % cards.length) + cards.length) % cards.length;
                     movementRef.current = null;
                     announceSelection();
                 }
@@ -323,7 +340,7 @@ const ClientShowcaseSection = () => {
                 !reduced.matches
             ) {
                 phaseRef.current =
-                    (phaseRef.current + dt / 5.5) % cards.length;
+                    (phaseRef.current + dt / AUTO_ADVANCE_SECONDS) % cards.length;
 
                 render();
             }
@@ -353,6 +370,7 @@ const ClientShowcaseSection = () => {
         controls.addEventListener("keydown", handleKeyDown);
 
         reduced.addEventListener("change", handleReducedMotionChange);
+        document.addEventListener("visibilitychange", handleVisibilityChange);
 
         size();
         syncPause();
@@ -379,6 +397,7 @@ const ClientShowcaseSection = () => {
             controls.removeEventListener("keydown", handleKeyDown);
 
             reduced.removeEventListener("change", handleReducedMotionChange);
+            document.removeEventListener("visibilitychange", handleVisibilityChange);
         };
     }, []);
 
