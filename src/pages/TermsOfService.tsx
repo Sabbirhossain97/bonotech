@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
-import { Navbar } from '@/components/sections/Navbar/Navbar'
-import Footer from '@/components/sections/Footer/Footer'
+import { Navbar } from '@/shared/Navbar'
+import Footer from '@/shared/Footer/Footer'
 
 const sectionClass =
     'rounded-2xl border border-border-primary/80 bg-surface-white/60 p-8 sm:p-10 shadow-[0_1px_0_rgba(0,0,0,0.04)]'
