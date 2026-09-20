@@ -1,0 +1,15 @@
+<svg class="metric-graphic development-graphic" viewBox="0 0 320 185" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="growth-ink" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#2f1952"/>
+      <stop offset="1" stop-color="#8954e8"/>
+    </linearGradient>
+  </defs>
+  <path class="growth-guide" d="M4 165H316" fill="none" stroke="currentColor" stroke-opacity=".12"/>
+  <g class="growth-pixels" fill="url(#growth-ink)">
+    <path d="M10 143h10v10H10z M22 143h10v10H22z M22 131h10v10H22z M34 131h10v10H34z M46 131h10v10H46z M46 119h10v10H46z M58 119h10v10H58z M70 119h10v10H70z M70 107h10v10H70z M82 107h10v10H82z M94 107h10v10H94z M94 95h10v10H94z M106 95h10v10H106z M118 95h10v10H118z M118 83h10v10H118z M130 83h10v10H130z M142 83h10v10H142z M142 71h10v10H142z M154 71h10v10H154z M166 71h10v10H166z M166 59h10v10H166z M178 59h10v10H178z M190 59h10v10H190z M190 47h10v10H190z M202 47h10v10H202z M214 47h10v10H214z M214 35h10v10H214z M226 35h10v10H226z M238 35h10v10H238z M238 23h10v10H238z M250 23h10v10H250z M262 23h10v10H262z M262 11h10v10H262z M274 11h10v10H274z M286 11h10v10H286z"/>
+  </g>
+  <g class="growth-echo" fill="#674ea5" opacity=".20">
+    <path d="M10 131h10v10H10z M46 143h10v10H46z M82 131h10v10H82z M106 71h10v10H106z M142 107h10v10H142z M178 83h10v10H178z M214 11h10v10H214z M250 47h10v10H250z M286 35h10v10H286z"/>
+  </g>
+</svg>

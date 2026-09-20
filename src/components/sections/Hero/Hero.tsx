@@ -1,11 +1,10 @@
 import type { HeroProps } from "./Hero.types";
-import { HeroPill } from "./components/HeroPill";
 import { HeroButton } from "./components/HeroButton";
 
 import bonotechHeroBg1 from "@/assets/bonotech-hero-bg-1.png";
 
 export function Hero({
-  pillText = "POWERED BY SPEED",
+  // pillText = "POWERED BY SPEED",
   title = "Enterprise\nSoftware Development",
   subtitle = "AI- Native, Expert-Led, Market-Ready Product Development",
   ctaLabel = "Book a Free Consultation With Us Today",

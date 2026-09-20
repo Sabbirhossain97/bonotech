@@ -1,0 +1,20 @@
+<svg class="metric-graphic quality-graphic" viewBox="0 0 320 192" aria-hidden="true">
+  <g class="qa-row qa-row-one">
+    <rect x="5" y="15" width="44" height="44" rx="3" fill="#fff" fill-opacity=".12"/>
+    <path d="m17 36 7 7 13-15" fill="none" stroke="#fff" stroke-width="2"/>
+    <path d="M72 28h119M72 44h73" stroke="#fff" stroke-opacity=".22" stroke-width="5"/>
+    <path fill="#fff" d="M274 30h14v14h-14z"/>
+  </g>
+  <g class="qa-row qa-row-two">
+    <rect x="5" y="75" width="44" height="44" rx="3" fill="#fff" fill-opacity=".12"/>
+    <path d="m17 96 7 7 13-15" fill="none" stroke="#fff" stroke-width="2"/>
+    <path d="M72 88h158M72 104h99" stroke="#fff" stroke-opacity=".22" stroke-width="5"/>
+    <path fill="#fff" fill-opacity=".65" d="M274 90h14v14h-14z"/>
+  </g>
+  <g class="qa-row qa-row-three">
+    <rect x="5" y="135" width="44" height="44" rx="3" fill="#fff" fill-opacity=".12"/>
+    <path d="m17 156 7 7 13-15" fill="none" stroke="#fff" stroke-width="2"/>
+    <path d="M72 148h101M72 164h134" stroke="#fff" stroke-opacity=".22" stroke-width="5"/>
+    <path fill="#fff" fill-opacity=".35" d="M274 150h14v14h-14z"/>
+  </g>
+</svg>

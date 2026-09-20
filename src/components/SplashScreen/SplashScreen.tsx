@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useState } from 'react'
 import { motion, useAnimation } from 'framer-motion'
-import bonotechSplashMark from '@/assets/bonotech-splash-mark.png'
-import bonotechSplashWordmark from '@/assets/bonotech-splash-wordmark.png'
+import bonotechSplashMark from '@/assets/bonotech-splash-mark2.png'
+import bonotechSplashWordmark from '@/assets/bonotech-splash-wordmark2.png'
 import type { SplashScreenProps } from './SplashScreen.types'
 
 type SplashPhase = 'logo-rise' | 'text-in' | 'hold' | 'exit'
