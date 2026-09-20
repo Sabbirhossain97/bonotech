@@ -4,7 +4,7 @@ import { ArrowRight, X } from 'lucide-react'
 import { handleHashLinkClick } from '@/lib/scroll'
 import { cn } from '@/lib/utils'
 import bonotechLogo from '@/assets/bonotech-logo-mono2.png'
-import menuIcon from '@/assets/icons/menu-line-horizontal.svg'
+import menuIcon from '@/assets/icons/menu_bars_icon.svg'
 
 export interface NavLink {
     label: string
@@ -126,26 +126,26 @@ export function Navbar({ links = DEFAULT_LINKS }: NavbarProps) {
                     {/* Mobile Menu Toggle */}
                     <button
                         type="button"
-                        className="relative z-[60] p-2 text-white lg:hidden"
+                        className="relative z-[60] flex h-11 w-11 shrink-0 items-center justify-center text-white lg:hidden"
                         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                         aria-expanded={mobileMenuOpen}
                         aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
                     >
                         <span
                             className={cn(
-                                'absolute inset-2 flex items-center justify-center transition-all duration-300',
+                                'absolute inset-0 flex items-center justify-center transition-all duration-300',
                                 mobileMenuOpen ? 'opacity-100 rotate-0 scale-100' : 'opacity-0 rotate-90 scale-50'
                             )}
                         >
-                            <X className="w-6 h-6 text-white" />
+                            <X className="h-7 w-7 text-white" />
                         </span>
                         <span
                             className={cn(
-                                'flex items-center justify-center transition-all duration-300',
+                                'absolute inset-0 flex items-center justify-center transition-all duration-300',
                                 mobileMenuOpen ? 'opacity-0 rotate-90 scale-50' : 'opacity-100 rotate-0 scale-100'
                             )}
                         >
-                            <img src={menuIcon} alt="" aria-hidden="true" className="w-6 h-6" />
+                            <img src={menuIcon} alt="" aria-hidden="true" className="h-7 w-7" />
                         </span>
                     </button>
                 </div>
