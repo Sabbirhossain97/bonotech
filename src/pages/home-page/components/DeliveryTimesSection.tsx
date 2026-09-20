@@ -233,7 +233,7 @@ const DeliveryTimesSection = () => {
                                     aria-label={`${index + 1} of ${deliveryItems.length}: ${item.label}`}
                                     className="relative h-[359px] w-[min(84vw,385px)] flex-none snap-center overflow-hidden rounded-[4px] border border-[#4d3d5e]/55 bg-[linear-gradient(145deg,#1b1226_0%,#160d21_55%,#12091c_100%)] shadow-[0_20px_38px_-18px_rgba(0,0,0,.85)] md:w-[385px] lg:w-full lg:max-w-[385px]"
                                 >
-                                    <button type="button" aria-label={`Bring ${item.label} to the center`} aria-pressed={isActive} onClick={() => selectCard(index)} className="absolute inset-0 z-20 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#b993df]" />
+                                    <button type="button" aria-label={`Bring ${item.label} to the center`} aria-pressed={isActive} onClick={() => selectCard(index)} className="absolute inset-0 z-20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#b993df]" />
 
                                     <div className="relative z-10 px-[22px] pt-[22px]">
                                         <h3 className="m-0 whitespace-nowrap text-[55px] font-extralight leading-[0.98] tracking-[-0.075em] text-[#e5deeb] sm:text-[58px] lg:text-[60px]">
@@ -284,7 +284,7 @@ const DeliveryTimesSection = () => {
                     </div>
 
                     {/* Navigation */}
-                    <div className="mt-8 flex items-center justify-center gap-4">
+                    {/* <div className="mt-8 flex items-center justify-center gap-4">
                         <button type="button" onClick={handlePrevious} aria-label="Previous delivery card" className="grid h-9 w-9 place-items-center rounded-[4px] border border-[#4c3b5f]/65 bg-[#150c20]/85 text-[#b6a5c5] transition hover:border-[#8a67aa] hover:bg-[#21122f] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#a57acb]">
                             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="h-[16px] w-[16px]">
                                 <path d="m14 7-5 5 5 5M9 12h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -331,7 +331,7 @@ const DeliveryTimesSection = () => {
 
                     <p className="sr-only" role="status" aria-live="polite" aria-atomic="true">
                         {deliveryItems[activeIndex].value} {deliveryItems[activeIndex].unit}. {deliveryItems[activeIndex].descriptionPrefix} {deliveryItems[activeIndex].descriptionStrong}
-                    </p>
+                    </p> */}
                 </div>
             </div>
         </section>

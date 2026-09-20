@@ -21,8 +21,19 @@ type Client = {
 type Movement = {
     from: number;
     to: number;
-    start: number;
+    elapsed: number;
 };
+
+type ClientGeometry = {
+    count: number;
+    halfCount: number;
+    spacing: number;
+    normalizationWidth: number;
+};
+
+const AUTO_ADVANCE_SECONDS = 5.5;
+const MANUAL_MOVE_MS = 950;
+const MAX_FRAME_DELTA_SECONDS = 0.06;
 
 const clients: Client[] = [
     {
@@ -76,38 +87,6 @@ const clients: Client[] = [
     },
 ];
 
-const clientPose = (
-    index: number,
-    phase: number,
-    count: number,
-    stageWidth: number,
-    cardWidth: number,
-) => {
-    const slot = ((index - phase + count / 2) % count + count) % count - count / 2;
-
-    const spacing = Math.max(
-        cardWidth + 58,
-        (stageWidth + cardWidth * 2.4) / count,
-    );
-
-    const x = slot * spacing;
-
-    const across = Math.max(
-        -1,
-        Math.min(1, x / Math.max(stageWidth * 0.55, 360)),
-    );
-
-    const recess = Math.max(0, 1 - across * across);
-
-    return {
-        x,
-        y: recess * 18,
-        z: -320 * recess,
-        angle: -across * 28,
-        light: 1 - 0.1 * recess,
-    };
-};
-
 const ClientShowcaseSection = () => {
     const sectionRef = useRef<HTMLElement | null>(null);
     const orbitRef = useRef<HTMLUListElement | null>(null);
@@ -115,8 +94,12 @@ const ClientShowcaseSection = () => {
     const cardRefs = useRef<(HTMLLIElement | null)[]>([]);
 
     const phaseRef = useRef(0);
-    const stageWidthRef = useRef(0);
-    const cardWidthRef = useRef(0);
+    const geometryRef = useRef<ClientGeometry>({
+        count: clients.length,
+        halfCount: clients.length / 2,
+        spacing: 0,
+        normalizationWidth: 360,
+    });
 
     const visibleRef = useRef(false);
     const hoveredRef = useRef(false);
@@ -140,33 +123,62 @@ const ClientShowcaseSection = () => {
         if (!section || !orbit || !controls || !cards.length) return;
 
         const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+        const renderedLights = new Array<number>(cards.length);
+        const renderedZIndices = new Array<number>(cards.length);
 
         section.classList.add("is-enhanced");
 
         const render = () => {
-            cards.forEach((card, index) => {
-                const p = clientPose(
-                    index,
-                    phaseRef.current,
-                    cards.length,
-                    stageWidthRef.current,
-                    cardWidthRef.current,
-                );
+            const geometry = geometryRef.current;
+            const phase = phaseRef.current;
 
-                card.style.transform = `translate(-50%, -50%) translate3d(${p.x.toFixed(2)}px, ${p.y.toFixed(2)}px, ${p.z.toFixed(2)}px) rotateY(${p.angle.toFixed(2)}deg)`;
-                card.style.filter = `brightness(${p.light.toFixed(3)})`;
-                card.style.zIndex = String(Math.round(1000 + p.z));
+            cards.forEach((card, index) => {
+                const slot =
+                    ((index - phase + geometry.halfCount) % geometry.count +
+                        geometry.count) %
+                        geometry.count -
+                    geometry.halfCount;
+                const x = slot * geometry.spacing;
+                const across = Math.max(
+                    -1,
+                    Math.min(1, x / geometry.normalizationWidth),
+                );
+                const recess = Math.max(0, 1 - across * across);
+                const y = recess * 18;
+                const z = -320 * recess;
+                const angle = -across * 28;
+                const light = Math.round((1 - 0.1 * recess) * 1000) / 1000;
+                const zIndex = Math.round(1000 + z);
+
+                card.style.transform = `translate(-50%, -50%) translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, ${z.toFixed(2)}px) rotateY(${angle.toFixed(2)}deg)`;
+
+                if (renderedLights[index] !== light) {
+                    card.style.filter = `brightness(${light.toFixed(3)})`;
+                    renderedLights[index] = light;
+                }
+
+                if (renderedZIndices[index] !== zIndex) {
+                    card.style.zIndex = String(zIndex);
+                    renderedZIndices[index] = zIndex;
+                }
             });
         };
 
         const size = () => {
-            stageWidthRef.current = orbit.clientWidth;
-
+            const stageWidth = orbit.clientWidth;
             const firstCard = cards[0];
+            const cardWidth = firstCard?.offsetWidth ?? 0;
+            const count = cards.length;
 
-            if (firstCard) {
-                cardWidthRef.current = firstCard.offsetWidth;
-            }
+            geometryRef.current = {
+                count,
+                halfCount: count / 2,
+                spacing: Math.max(
+                    cardWidth + 58,
+                    (stageWidth + cardWidth * 2.4) / count,
+                ),
+                normalizationWidth: Math.max(stageWidth * 0.55, 360),
+            };
 
             render();
         };
@@ -208,7 +220,7 @@ const ClientShowcaseSection = () => {
             movementRef.current = {
                 from: phaseRef.current,
                 to: destination,
-                start: performance.now(),
+                elapsed: 0,
             };
         };
 
@@ -222,6 +234,12 @@ const ClientShowcaseSection = () => {
 
         const handleToggle = () => {
             userPausedRef.current = !userPausedRef.current;
+
+            if (!userPausedRef.current) {
+                focusedRef.current = false;
+            }
+
+            lastRef.current = performance.now();
             syncPause();
         };
 
@@ -233,6 +251,7 @@ const ClientShowcaseSection = () => {
 
         const handlePointerLeave = () => {
             hoveredRef.current = false;
+            lastRef.current = performance.now();
         };
 
         const handleFocusIn = () => {
@@ -241,6 +260,7 @@ const ClientShowcaseSection = () => {
 
         const handleFocusOut = (event: FocusEvent) => {
             focusedRef.current = controls.contains(event.relatedTarget as Node);
+            lastRef.current = performance.now();
         };
 
         const handleKeyDown = (event: KeyboardEvent) => {
@@ -259,7 +279,12 @@ const ClientShowcaseSection = () => {
                 movementRef.current = null;
             }
 
+            lastRef.current = performance.now();
             render();
+        };
+
+        const handleVisibilityChange = () => {
+            lastRef.current = performance.now();
         };
 
         let intersectionObserver: IntersectionObserver | null = null;
@@ -268,6 +293,7 @@ const ClientShowcaseSection = () => {
             intersectionObserver = new IntersectionObserver(
                 ([entry]) => {
                     visibleRef.current = entry.isIntersecting;
+                    lastRef.current = performance.now();
                 },
                 {
                     threshold: 0.01,
@@ -286,21 +312,23 @@ const ClientShowcaseSection = () => {
         const tick = (now: number) => {
             frameRef.current = requestAnimationFrame(tick);
 
+            const previous = lastRef.current;
+            lastRef.current = now;
+
             if (document.hidden || !visibleRef.current) {
-                lastRef.current = now;
                 return;
             }
 
-            if (now - lastRef.current < 1000 / 30) return;
-
-            const dt = Math.min((now - lastRef.current) / 1000, 0.06);
-
-            lastRef.current = now;
+            const dt = previous
+                ? Math.min((now - previous) / 1000, MAX_FRAME_DELTA_SECONDS)
+                : 0;
 
             const movement = movementRef.current;
 
             if (movement) {
-                const t = Math.min((now - movement.start) / 950, 1);
+                movement.elapsed += dt * 1000;
+
+                const t = Math.min(movement.elapsed / MANUAL_MOVE_MS, 1);
 
                 const ease =
                     t < 0.5
@@ -311,6 +339,8 @@ const ClientShowcaseSection = () => {
                     movement.from + (movement.to - movement.from) * ease;
 
                 if (t === 1) {
+                    phaseRef.current =
+                        ((movement.to % cards.length) + cards.length) % cards.length;
                     movementRef.current = null;
                     announceSelection();
                 }
@@ -323,7 +353,7 @@ const ClientShowcaseSection = () => {
                 !reduced.matches
             ) {
                 phaseRef.current =
-                    (phaseRef.current + dt / 5.5) % cards.length;
+                    (phaseRef.current + dt / AUTO_ADVANCE_SECONDS) % cards.length;
 
                 render();
             }
@@ -353,6 +383,7 @@ const ClientShowcaseSection = () => {
         controls.addEventListener("keydown", handleKeyDown);
 
         reduced.addEventListener("change", handleReducedMotionChange);
+        document.addEventListener("visibilitychange", handleVisibilityChange);
 
         size();
         syncPause();
@@ -379,6 +410,7 @@ const ClientShowcaseSection = () => {
             controls.removeEventListener("keydown", handleKeyDown);
 
             reduced.removeEventListener("change", handleReducedMotionChange);
+            document.removeEventListener("visibilitychange", handleVisibilityChange);
         };
     }, []);
 
