@@ -428,8 +428,8 @@ const AboutImpactSection = () => {
                     </article>
 
                     {/* CTA */}
-                    <button
-                        type="button"
+                    <a
+                        href={"#discovery-call"}
                         className="group relative isolate flex min-h-[118px] items-center justify-between overflow-hidden rounded-[5px] border border-white/15 bg-[#211033] px-7 text-left text-white transition hover:border-[#c6a1f0]/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a5f7] sm:px-8 lg:min-h-0"
                     >
                         <span className="absolute inset-0 origin-bottom scale-y-0 bg-[linear-gradient(125deg,#6d39bd,#4a217f)] transition-transform duration-500 ease-out group-hover:scale-y-100 group-focus-visible:scale-y-100" />
@@ -450,7 +450,7 @@ const AboutImpactSection = () => {
                                 strokeWidth="1.5"
                             />
                         </svg>
-                    </button>
+                    </a>
                 </div>
             </div>
         </section>
