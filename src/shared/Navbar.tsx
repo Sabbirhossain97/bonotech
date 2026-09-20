@@ -18,10 +18,10 @@ export interface NavbarProps {
 
 
 const DEFAULT_LINKS: NavLink[] = [
-    { label: 'About', href: '#' },
-    { label: 'Clients', href: '#' },
-    { label: 'Services', href: '#' },
-    { label: 'Testimonials', href: '#' },
+    { label: 'About', href: '#sprint-numbers' },
+    { label: 'Products', href: '#our-clients' },
+    { label: 'Services', href: '#delivery-times' },
+    { label: 'Testimonials', href: '#client-testimonials' },
 ]
 
 export function Navbar({ links = DEFAULT_LINKS }: NavbarProps) {
