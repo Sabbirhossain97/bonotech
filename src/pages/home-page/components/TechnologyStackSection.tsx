@@ -22,6 +22,7 @@ import wordpressLogo from "@/assets/technology/wordpress.svg";
 import webflowLogo from "@/assets/technology/webflow.svg";
 import angularLogo from "@/assets/technology/angular.svg";
 import bonotechMark from "@/assets/technology/bonotech-mark.png";
+import SectionEdgeFade from "./SectionEdgeFade";
 
 type Technology = {
     name: string;
@@ -252,10 +253,11 @@ const TechnologyStackSection = () => {
 
     return (
         <section id="our-technology" aria-labelledby="technology-title" className="relative isolate min-h-screen overflow-hidden bg-[linear-gradient(180deg,#0d0716_0%,#10091b_28%,#12081e_100%)] px-5 pb-12 pt-20 text-white sm:px-6 sm:pt-24 lg:px-8 lg:pb-[70px] lg:pt-[105px]">
+            <SectionEdgeFade />
             {/* subtle atmosphere */}
             <div aria-hidden="true" className="pointer-events-none absolute left-1/2 top-[64%] -z-10 h-[60%] w-[90%] -translate-x-1/2 -translate-y-1/2 rounded-[50%] bg-[radial-gradient(ellipse_at_center,rgba(99,45,182,.24)_0%,rgba(75,24,133,.13)_40%,transparent_72%)] blur-[35px]" />
 
-            <div className="mx-auto w-full max-w-[1200px]">
+            <div className="relative z-10 mx-auto w-full max-w-[1200px]">
                 {/* Heading */}
                 <header className="relative z-20 mx-auto mb-[28px] max-w-[950px] text-center lg:mb-[34px]">
                     <p className="mb-4 text-[11px] font-medium uppercase tracking-[0.16em] text-[#ae96c8] sm:mb-5 sm:text-xs">

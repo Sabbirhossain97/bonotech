@@ -4,6 +4,7 @@ import projectsBackground from "@/assets/about/projects-background.mp4";
 import ludovicoMassari from "@/assets/about/ludovico-massari.jpeg";
 import divcLogo from "@/assets/about/divc.svg";
 import dataMotion from "@/assets/about/data-motion.mp4";
+import SectionEdgeFade from "./SectionEdgeFade";
 
 type VideoCardProps = {
     videoRef: React.RefObject<HTMLVideoElement | null>;
@@ -233,12 +234,9 @@ const AboutImpactSection = () => {
                 {/* Slight purple lift behind cards */}
                 <div className="absolute left-1/2 top-[64%] h-[48%] w-[86%] -translate-x-1/2 -translate-y-1/2 rounded-[50%] bg-[#542B80]/[0.08] blur-[105px]" />
 
-                {/* Top dark falloff */}
-                <div className="absolute inset-x-0 top-0 h-[155px] bg-gradient-to-b from-[#09060E] via-[#0D0714]/75 to-transparent" />
-
-                {/* Bottom dark falloff */}
-                <div className="absolute inset-x-0 bottom-0 h-[160px] bg-gradient-to-t from-[#09060E] via-[#0D0714]/70 to-transparent" />
             </div>
+
+            <SectionEdgeFade />
 
             <div className="relative z-10 mx-auto w-full max-w-[1200px]">
                 {/* Heading */}

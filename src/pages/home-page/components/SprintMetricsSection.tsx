@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
+import SectionEdgeFade from "./SectionEdgeFade";
+
 const SprintMetricsSection = () => {
     const sectionRef = useRef<HTMLElement | null>(null);
     const [isVisible, setIsVisible] = useState(false);
@@ -46,8 +48,9 @@ const SprintMetricsSection = () => {
     }, [reducedMotion]);
 
     return (
-        <section ref={sectionRef} id="sprint-numbers" aria-labelledby="sprint-metrics-title" className="relative overflow-hidden bg-[#1C102E] px-5 py-20 sm:px-6 sm:py-24 lg:px-8 lg:py-[110px]">
-            <div className="mx-auto w-full max-w-[1200px]">
+        <section ref={sectionRef} id="sprint-numbers" aria-labelledby="sprint-metrics-title" className="relative isolate overflow-hidden bg-[#12091D] px-5 py-20 sm:px-6 sm:py-24 lg:px-8 lg:py-[110px]">
+            <SectionEdgeFade />
+            <div className="relative z-10 mx-auto w-full max-w-[1200px]">
                 <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 lg:grid-rows-[180px_177px_200px_180px] lg:gap-5">
                     {/* Heading */}
                     <header className={`relative z-10 pb-7 transition-all duration-700 ease-out md:col-span-2 lg:col-span-1 lg:row-span-1 lg:pb-0 ${isVisible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"}`}>

@@ -18,10 +18,10 @@ export interface NavbarProps {
 
 
 const DEFAULT_LINKS: NavLink[] = [
-    { label: 'About', href: '#' },
-    { label: 'Clients', href: '#' },
-    { label: 'Services', href: '#' },
-    { label: 'Testimonials', href: '#' },
+    { label: 'About', href: '#sprint-numbers' },
+    { label: 'Products', href: '#our-clients' },
+    { label: 'Services', href: '#delivery-times' },
+    { label: 'Testimonials', href: '#client-testimonials' },
 ]
 
 export function Navbar({ links = DEFAULT_LINKS }: NavbarProps) {
@@ -93,7 +93,7 @@ export function Navbar({ links = DEFAULT_LINKS }: NavbarProps) {
                         />
                     </a>
 
-                    <div className="hidden lg:flex items-center">
+                    <div className="hidden lg:flex items-center gap-5">
                         {links.map((link) => (
                             <a
                                 key={link.label}
@@ -106,19 +106,22 @@ export function Navbar({ links = DEFAULT_LINKS }: NavbarProps) {
                         ))}
                     </div>
 
-                    <a
-                        href={navHref('#schedule')}
-                        onClick={(event) => handleNavLinkClick(event, '#schedule')}
-                        className={cn(
-                            "group hidden h-[49px] items-center gap-3 rounded-full py-[6px] pl-[25px] pr-[7px] text-[17px] font-semibold leading-[1.4] text-white backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] lg:inline-flex",
-                            isScrolled ? "bg-white/10 hover:bg-white/20" : "bg-white/13 hover:bg-white/20"
-                        )}
-                    >
-                        Contact Us
-                        <span className="flex h-[32px] w-[32px] items-center justify-center rounded-full bg-white transition-transform duration-300 group-hover:translate-x-0.5">
-                            <ArrowRight className="h-[16px] w-[16px] text-[#131314] transition-transform duration-300 group-hover:translate-x-0.5" />
-                        </span>
-                    </a>
+                    <div className="max-w-[225px] flex justify-end w-full">
+                        <a
+                            href={navHref('#schedule')}
+                            onClick={(event) => handleNavLinkClick(event, '#schedule')}
+                            className={cn(
+                                "group hidden h-[49px] items-center gap-3 rounded-full py-[6px] pl-[25px] pr-[7px] text-[17px] font-semibold leading-[1.4] text-white backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] lg:inline-flex",
+                                isScrolled ? "bg-white/10 hover:bg-white/20" : "bg-white/13 hover:bg-white/20"
+                            )}
+                        >
+                            Contact Us
+                            <span className="flex h-[32px] w-[32px] items-center justify-center rounded-full bg-white transition-transform duration-300 group-hover:translate-x-0.5">
+                                <ArrowRight className="h-[16px] w-[16px] text-[#131314] transition-transform duration-300 group-hover:translate-x-0.5" />
+                            </span>
+                        </a>
+                    </div>
+
 
                     {/* Mobile Menu Toggle */}
                     <button

@@ -24,7 +24,7 @@ const Hero = () => {
       {/* Bottom fade into next section */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-[clamp(150px,25vh,280px)] bg-gradient-to-b from-transparent to-[#08060c]"
+        className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-[clamp(150px,25vh,280px)] bg-gradient-to-b from-transparent to-[var(--home-section-seam)]"
       />
 
       <div className="mx-auto flex min-h-[800px] min-h-[100svh] w-full max-w-[1480px] flex-1 flex-col justify-center py-12 sm:py-14 lg:py-[clamp(50px,7vh,78px)]">

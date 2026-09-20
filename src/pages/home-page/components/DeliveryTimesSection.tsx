@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import websiteVideo from "@/assets/delivery/website-background.mp4";
 import appVideo from "@/assets/delivery/mobile-september-background.mp4";
 import enterpriseVideo from "@/assets/delivery/enterprise-updated-background.mp4";
+import SectionEdgeFade from "./SectionEdgeFade";
 
 type DeliveryItem = {
     id: number;
@@ -185,11 +186,9 @@ const DeliveryTimesSection = () => {
 
             <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-20 bg-[radial-gradient(ellipse_at_50%_48%,rgba(91,56,139,0.30)_0%,rgba(57,34,85,0.20)_38%,rgba(25,15,39,0.08)_63%,transparent_80%)]" />
 
-            <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[160px] bg-gradient-to-b from-[#0a0710] via-[#0f0919]/90 to-transparent" />
+            <SectionEdgeFade />
 
-            <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-[170px] bg-gradient-to-t from-[#0a0710] via-[#0f0919]/85 to-transparent" />
-
-            <div className="mx-auto w-full max-w-[1200px]">
+            <div className="relative z-10 mx-auto w-full max-w-[1200px]">
                 {/* Heading */}
                 <header className="mx-auto mb-[34px] max-w-[650px] text-center sm:mb-10 lg:mb-[38px]">
                     <p className="mb-3 text-[10px] font-medium uppercase tracking-[0.18em] text-[#a994bd] sm:text-[11px]">
@@ -252,7 +251,17 @@ const DeliveryTimesSection = () => {
                                         </p>
                                     </div>
 
-                                    <div className="absolute bottom-[22px] left-[22px] right-[22px] h-[139px] overflow-hidden rounded-[3px] bg-[#23122f]">
+                                    <div
+                                        className="absolute bottom-[22px] left-[22px] right-[22px] h-[139px] overflow-hidden rounded-[3px] bg-transparent"
+                                        style={{
+                                            WebkitMaskImage:
+                                                "linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent), linear-gradient(180deg, transparent, #000 8%, #000 92%, transparent)",
+                                            maskImage:
+                                                "linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent), linear-gradient(180deg, transparent, #000 8%, #000 92%, transparent)",
+                                            WebkitMaskComposite: "source-in",
+                                            maskComposite: "intersect",
+                                        }}
+                                    >
                                         <video
                                             ref={(element) => {
                                                 videoRefs.current[index] = element;
@@ -264,11 +273,10 @@ const DeliveryTimesSection = () => {
                                             preload="metadata"
                                             tabIndex={-1}
                                             aria-hidden="true"
-                                            className="h-full w-full object-cover"
+                                            className="pointer-events-none h-full w-full object-cover opacity-90 grayscale contrast-[1.1]"
                                         />
 
-                                        <div className="pointer-events-none absolute inset-0 bg-[#5d3d8d]/20" />
-                                        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#72539c]/15 via-transparent to-[#2b153f]/35" />
+                                        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(145deg,rgba(20,6,40,.77),rgba(59,18,104,.66)_55%,rgba(19,5,39,.9))]" />
                                     </div>
                                 </div>
                             );

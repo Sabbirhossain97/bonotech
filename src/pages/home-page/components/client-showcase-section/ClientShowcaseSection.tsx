@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import "./ClientShowcaseSection.css";
+import SectionEdgeFade from "../SectionEdgeFade";
 
 import getMyGrailLogo from "@/assets/clients/get-my-grail.svg";
 import ditechLogo from "@/assets/clients/ditech.svg";
@@ -388,6 +389,7 @@ const ClientShowcaseSection = () => {
             className="clients"
             aria-labelledby="clients-title"
         >
+            <SectionEdgeFade />
             <header className="clients-heading">
                 <p className="clients-eyebrow">
                     BRANDS WE&apos;VE BUILT WITH
