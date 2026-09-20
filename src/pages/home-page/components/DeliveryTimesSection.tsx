@@ -256,9 +256,9 @@ const DeliveryTimesSection = () => {
                                         className="absolute bottom-[22px] left-[22px] right-[22px] h-[139px] overflow-hidden rounded-[3px] bg-transparent"
                                         style={{
                                             WebkitMaskImage:
-                                                "linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent), linear-gradient(180deg, transparent, #000 16%, #000 82%, transparent)",
+                                                "linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent), linear-gradient(180deg, transparent, #000 8%, #000 92%, transparent)",
                                             maskImage:
-                                                "linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent), linear-gradient(180deg, transparent, #000 16%, #000 82%, transparent)",
+                                                "linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent), linear-gradient(180deg, transparent, #000 8%, #000 92%, transparent)",
                                             WebkitMaskComposite: "source-in",
                                             maskComposite: "intersect",
                                         }}
