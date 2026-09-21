@@ -47,11 +47,8 @@ const deliveryItems: DeliveryItem[] = [
 
 const DeliveryTimesSection = () => {
     const sectionRef = useRef<HTMLElement | null>(null);
-    const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
     const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
-    const dragStartX = useRef<number | null>(null);
 
-    const [activeIndex, setActiveIndex] = useState(1);
     const [videosPaused, setVideosPaused] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
     const [reducedMotion, setReducedMotion] = useState(false);
@@ -63,7 +60,7 @@ const DeliveryTimesSection = () => {
             video.muted = true;
 
             if (isVisible && !document.hidden && !videosPaused && !reducedMotion) {
-                video.play().catch(() => { });
+                video.play().catch(() => {});
             } else {
                 video.pause();
             }
@@ -121,70 +118,23 @@ const DeliveryTimesSection = () => {
         };
     }, [syncVideos]);
 
-    const selectCard = (index: number) => {
-        const next = (index + deliveryItems.length) % deliveryItems.length;
-
-        setActiveIndex(next);
-
-        if (window.innerWidth < 768) {
-            cardRefs.current[next]?.scrollIntoView({
-                behavior: reducedMotion ? "auto" : "smooth",
-                inline: "center",
-                block: "nearest",
-            });
-        }
-    };
-
-    const handlePrevious = () => {
-        selectCard(activeIndex - 1);
-    };
-
-    const handleNext = () => {
-        selectCard(activeIndex + 1);
-    };
-
-    const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
-        dragStartX.current = event.clientX;
-    };
-
-    const handlePointerUp = (event: React.PointerEvent<HTMLDivElement>) => {
-        if (dragStartX.current === null) return;
-
-        const difference = event.clientX - dragStartX.current;
-
-        if (Math.abs(difference) > 45) {
-            if (difference < 0) {
-                handleNext();
-            } else {
-                handlePrevious();
-            }
-        }
-
-        dragStartX.current = null;
-    };
-
     return (
         <section
             ref={sectionRef}
             id="delivery-times"
             aria-labelledby="delivery-times-title"
-            onKeyDown={(event) => {
-                if (event.key === "ArrowLeft") {
-                    event.preventDefault();
-                    handlePrevious();
-                }
-
-                if (event.key === "ArrowRight") {
-                    event.preventDefault();
-                    handleNext();
-                }
-            }}
             className="relative isolate flex min-h-screen items-center overflow-hidden bg-[#110a1d] px-5 py-20 text-white sm:px-6 md:py-24 lg:px-8 lg:py-[90px]"
         >
             {/* Background */}
-            <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-30 bg-[#110a1d]" />
+            <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 -z-30 bg-[#110a1d]"
+            />
 
-            <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-20 bg-[radial-gradient(ellipse_at_50%_48%,rgba(91,56,139,0.30)_0%,rgba(57,34,85,0.20)_38%,rgba(25,15,39,0.08)_63%,transparent_80%)]" />
+            <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 -z-20 bg-[radial-gradient(ellipse_at_50%_48%,rgba(91,56,139,0.30)_0%,rgba(57,34,85,0.20)_38%,rgba(25,15,39,0.08)_63%,transparent_80%)]"
+            />
 
             <SectionEdgeFade />
 
@@ -195,7 +145,10 @@ const DeliveryTimesSection = () => {
                         Average Delivery Times
                     </p>
 
-                    <h2 id="delivery-times-title" className="m-0 text-[36px] font-light leading-[1.05] tracking-[-0.05em] text-[#f7f1fb] sm:text-[44px] md:text-[49px] lg:text-[52px]">
+                    <h2
+                        id="delivery-times-title"
+                        className="m-0 text-[36px] font-light leading-[1.05] tracking-[-0.05em] text-[#f7f1fb] sm:text-[44px] md:text-[49px] lg:text-[52px]"
+                    >
                         Built for Momentum
                         <span className="mt-1 block font-semibold text-[#ba94e0]">
                             Measured in Days
@@ -209,129 +162,68 @@ const DeliveryTimesSection = () => {
                     </p>
                 </header>
 
-                {/* Carousel */}
-                <div role="region" aria-roledescription="carousel" aria-label="Average delivery times" className="relative">
-                    <div
-                        onPointerDown={handlePointerDown}
-                        onPointerUp={handlePointerUp}
-                        onPointerCancel={() => {
-                            dragStartX.current = null;
-                        }}
-                        className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:gap-5 lg:grid lg:grid-cols-3 lg:overflow-visible lg:pb-0"
-                    >
-                        {deliveryItems.map((item, index) => {
-                            const isActive = activeIndex === index;
+                {/* Static responsive layout: 2 + 1 on small/tablet screens, 3 side by side from 768px+ */}
+                <div
+                    role="region"
+                    aria-label="Average delivery times"
+                    className="mx-auto grid w-full max-w-[1200px] grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 md:grid-cols-3"
+                >
+                    {deliveryItems.map((item, index) => (
+                        <div
+                            key={item.id}
+                            role="group"
+                            aria-label={`${item.label}: ${item.value} ${item.unit}`}
+                            className={`relative h-[359px] w-full overflow-hidden rounded-[4px] border border-[#4d3d5e]/55 bg-[linear-gradient(145deg,#1b1226_0%,#160d21_55%,#12091c_100%)] shadow-[0_20px_38px_-18px_rgba(0,0,0,.85)] ${
+                                index === deliveryItems.length - 1
+                                    ? "sm:col-span-2 sm:w-[calc(50%_-_10px)] sm:justify-self-center md:col-span-1 md:w-full md:justify-self-auto"
+                                    : ""
+                            }`}
+                        >
+                            <div className="relative z-10 px-[22px] pt-[22px]">
+                                <h3 className="m-0 whitespace-nowrap text-[55px] font-extralight leading-[0.98] tracking-[-0.075em] text-[#e5deeb] sm:text-[58px] lg:text-[60px]">
+                                    {item.value}
+                                    <span className="ml-2 font-extralight tracking-[-0.06em]">
+                                        {item.unit}
+                                    </span>
+                                </h3>
 
-                            return (
-                                <div
-                                    key={item.id}
+                                <p className="mt-[12px] max-w-[310px] text-[12px] font-light leading-[1.5] tracking-[-0.02em] text-[#9d91a8] sm:text-[13px]">
+                                    {item.descriptionPrefix}{" "}
+                                    <strong className="font-semibold text-[#d9d0df]">
+                                        {item.descriptionStrong}
+                                    </strong>
+                                </p>
+                            </div>
+
+                            <div
+                                className="absolute bottom-[22px] left-[22px] right-[22px] h-[139px] overflow-hidden rounded-[3px] bg-transparent"
+                                style={{
+                                    WebkitMaskImage:
+                                        "linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent), linear-gradient(180deg, transparent, #000 8%, #000 92%, transparent)",
+                                    maskImage:
+                                        "linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent), linear-gradient(180deg, transparent, #000 8%, #000 92%, transparent)",
+                                    WebkitMaskComposite: "source-in",
+                                    maskComposite: "intersect",
+                                }}
+                            >
+                                <video
                                     ref={(element) => {
-                                        cardRefs.current[index] = element;
+                                        videoRefs.current[index] = element;
                                     }}
-                                    role="group"
-                                    aria-roledescription="slide"
-                                    aria-label={`${index + 1} of ${deliveryItems.length}: ${item.label}`}
-                                    className="relative h-[359px] w-[min(84vw,385px)] flex-none snap-center overflow-hidden rounded-[4px] border border-[#4d3d5e]/55 bg-[linear-gradient(145deg,#1b1226_0%,#160d21_55%,#12091c_100%)] shadow-[0_20px_38px_-18px_rgba(0,0,0,.85)] md:w-[385px] lg:w-full lg:max-w-[385px]"
-                                >
-                                    <button type="button" aria-label={`Bring ${item.label} to the center`} aria-pressed={isActive} onClick={() => selectCard(index)} className="absolute inset-0 z-20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#b993df]" />
+                                    src={item.video}
+                                    muted
+                                    loop
+                                    playsInline
+                                    preload="metadata"
+                                    tabIndex={-1}
+                                    aria-hidden="true"
+                                    className="pointer-events-none h-full w-full object-cover opacity-90 grayscale contrast-[1.1]"
+                                />
 
-                                    <div className="relative z-10 px-[22px] pt-[22px]">
-                                        <h3 className="m-0 whitespace-nowrap text-[55px] font-extralight leading-[0.98] tracking-[-0.075em] text-[#e5deeb] sm:text-[58px] lg:text-[60px]">
-                                            {item.value}
-                                            <span className="ml-2 font-extralight tracking-[-0.06em]">
-                                                {item.unit}
-                                            </span>
-                                        </h3>
-
-                                        <p className="mt-[12px] max-w-[310px] text-[12px] font-light leading-[1.5] tracking-[-0.02em] text-[#9d91a8] sm:text-[13px]">
-                                            {item.descriptionPrefix}{" "}
-                                            <strong className="font-semibold text-[#d9d0df]">
-                                                {item.descriptionStrong}
-                                            </strong>
-                                        </p>
-                                    </div>
-
-                                    <div
-                                        className="absolute bottom-[22px] left-[22px] right-[22px] h-[139px] overflow-hidden rounded-[3px] bg-transparent"
-                                        style={{
-                                            WebkitMaskImage:
-                                                "linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent), linear-gradient(180deg, transparent, #000 8%, #000 92%, transparent)",
-                                            maskImage:
-                                                "linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent), linear-gradient(180deg, transparent, #000 8%, #000 92%, transparent)",
-                                            WebkitMaskComposite: "source-in",
-                                            maskComposite: "intersect",
-                                        }}
-                                    >
-                                        <video
-                                            ref={(element) => {
-                                                videoRefs.current[index] = element;
-                                            }}
-                                            src={item.video}
-                                            muted
-                                            loop
-                                            playsInline
-                                            preload="metadata"
-                                            tabIndex={-1}
-                                            aria-hidden="true"
-                                            className="pointer-events-none h-full w-full object-cover opacity-90 grayscale contrast-[1.1]"
-                                        />
-
-                                        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(145deg,rgba(20,6,40,.77),rgba(59,18,104,.66)_55%,rgba(19,5,39,.9))]" />
-                                    </div>
-                                </div>
-                            );
-                        })}
-                    </div>
-
-                    {/* Navigation */}
-                    {/* <div className="mt-8 flex items-center justify-center gap-4">
-                        <button type="button" onClick={handlePrevious} aria-label="Previous delivery card" className="grid h-9 w-9 place-items-center rounded-[4px] border border-[#4c3b5f]/65 bg-[#150c20]/85 text-[#b6a5c5] transition hover:border-[#8a67aa] hover:bg-[#21122f] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#a57acb]">
-                            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="h-[16px] w-[16px]">
-                                <path d="m14 7-5 5 5 5M9 12h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                        </button>
-
-                        <div className="flex items-center gap-[11px]" aria-label="Choose a delivery timeline">
-                            {deliveryItems.map((item, index) => {
-                                const isActive = activeIndex === index;
-
-                                return (
-                                    <button key={item.id} type="button" onClick={() => selectCard(index)} aria-label={`Show ${item.label}`} aria-current={isActive ? "true" : undefined} className="relative grid h-4 w-4 place-items-center">
-                                        {isActive ? (
-                                            <>
-                                                <span className="absolute h-[12px] w-[12px] rounded-full border border-[#9676b7]/85" />
-                                                <span className="h-[4px] w-[4px] rounded-full bg-[#a787ca]" />
-                                            </>
-                                        ) : (
-                                            <span className="h-[3px] w-[3px] rounded-full bg-[#785d90]" />
-                                        )}
-                                    </button>
-                                );
-                            })}
+                                <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(145deg,rgba(20,6,40,.77),rgba(59,18,104,.66)_55%,rgba(19,5,39,.9))]" />
+                            </div>
                         </div>
-
-                        <button type="button" onClick={handleNext} aria-label="Next delivery card" className="grid h-9 w-9 place-items-center rounded-[4px] border border-[#4c3b5f]/65 bg-[#150c20]/85 text-[#b6a5c5] transition hover:border-[#8a67aa] hover:bg-[#21122f] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#a57acb]">
-                            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="h-[16px] w-[16px]">
-                                <path d="m10 7 5 5-5 5M5 12h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                        </button>
-
-                        <button type="button" onClick={() => setVideosPaused((current) => !current)} aria-label={videosPaused ? "Play delivery videos" : "Pause delivery videos"} aria-pressed={videosPaused} className="grid h-9 w-9 place-items-center text-[#a99ab6] transition hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#a57acb]">
-                            {videosPaused ? (
-                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="h-[17px] w-[17px]">
-                                    <path d="m9 6 9 6-9 6V6Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
-                                </svg>
-                            ) : (
-                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="h-[17px] w-[17px]">
-                                    <path d="M9 6v12M15 6v12" stroke="currentColor" strokeWidth="1.6" />
-                                </svg>
-                            )}
-                        </button>
-                    </div>
-
-                    <p className="sr-only" role="status" aria-live="polite" aria-atomic="true">
-                        {deliveryItems[activeIndex].value} {deliveryItems[activeIndex].unit}. {deliveryItems[activeIndex].descriptionPrefix} {deliveryItems[activeIndex].descriptionStrong}
-                    </p> */}
+                    ))}
                 </div>
             </div>
         </section>

@@ -123,14 +123,14 @@ const Hero = () => {
         >
           <span
             aria-hidden="true"
-            className="block whitespace-nowrap text-center text-[clamp(2.8rem,9.06vw,8.5rem)] text-[#f9f7ff]"
+            className="block whitespace-nowrap text-center text-[clamp(2.0rem,9.06vw,8.5rem)] text-[#f9f7ff]"
           >
             OF EXCEPTIONAL
           </span>
 
           <span
             aria-hidden="true"
-            className="mt-0 block whitespace-nowrap text-center text-[clamp(2.8rem,9.06vw,8.5rem)] text-[#ddd0fb]"
+            className="mt-2 block whitespace-nowrap text-center text-[clamp(2.8rem,9.06vw,8.5rem)] text-[#ddd0fb]"
           >
             ENGINEERING
           </span>

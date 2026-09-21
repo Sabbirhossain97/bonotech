@@ -88,35 +88,15 @@ const TestimonialsSection = () => {
     const [activeIndex, setActiveIndex] = useState(0);
     const [paused, setPaused] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
-    const [isHovering, setIsHovering] = useState(false);
-    const [reducedMotion, setReducedMotion] = useState(false);
+    const [isPageVisible, setIsPageVisible] = useState(true);
 
     const activeTestimonial = testimonials[activeIndex];
 
     const autoDelay = useMemo(() => {
         const words = activeTestimonial.quote.trim().split(/\s+/).length;
 
-        return Math.max(16000, words * 350 + 3000);
+        return Math.min(5000, Math.max(7000, words * 120 + 2500));
     }, [activeTestimonial]);
-
-    useEffect(() => {
-        const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
-
-        const handlePreferenceChange = () => {
-            setReducedMotion(preference.matches);
-
-            if (preference.matches) {
-                setPaused(true);
-            }
-        };
-
-        handlePreferenceChange();
-        preference.addEventListener("change", handlePreferenceChange);
-
-        return () => {
-            preference.removeEventListener("change", handlePreferenceChange);
-        };
-    }, []);
 
     useEffect(() => {
         const section = sectionRef.current;
@@ -141,15 +121,10 @@ const TestimonialsSection = () => {
             timerRef.current = null;
         }
 
-        const sliderHasFocus = sliderRef.current?.contains(document.activeElement);
-
         if (
             paused ||
-            reducedMotion ||
             !isVisible ||
-            isHovering ||
-            document.hidden ||
-            sliderHasFocus
+            !isPageVisible
         ) {
             return;
         }
@@ -163,13 +138,14 @@ const TestimonialsSection = () => {
                 window.clearTimeout(timerRef.current);
             }
         };
-    }, [activeIndex, paused, reducedMotion, isVisible, isHovering, autoDelay]);
+    }, [activeIndex, paused, isVisible, isPageVisible, autoDelay]);
 
     useEffect(() => {
         const handleVisibilityChange = () => {
-            setIsVisible((current) => current);
+            setIsPageVisible(!document.hidden);
         };
 
+        handleVisibilityChange();
         document.addEventListener("visibilitychange", handleVisibilityChange);
 
         return () => {
@@ -248,16 +224,6 @@ const TestimonialsSection = () => {
                 role="region"
                 aria-roledescription="carousel"
                 aria-label="Client testimonials"
-                onPointerEnter={(event) => {
-                    if (event.pointerType === "mouse") {
-                        setIsHovering(true);
-                    }
-                }}
-                onPointerLeave={(event) => {
-                    if (event.pointerType === "mouse") {
-                        setIsHovering(false);
-                    }
-                }}
                 onKeyDown={(event) => {
                     if (
                         event.altKey ||

@@ -1,4 +1,8 @@
-import bonotechLogo from "@/assets/bonotech-logo2.svg";
+import bonotechLogo from "@/assets/bonotech-logo-mono2.png";
+import facebookIcon from "@/assets/footer/facebook.svg";
+import instagramIcon from "@/assets/footer/instagram.svg";
+import linkedInIcon from "@/assets/footer/instagram.svg";
+import twitterIcon from "@/assets/footer/twitter.svg";
 
 const Footer = () => {
     const currentYear = new Date().getFullYear();
@@ -255,41 +259,50 @@ const Footer = () => {
                     >
                         {[
                             {
-                                label: "X",
+                                icon: twitterIcon,
                                 href: "https://x.com/bonotechpteltd",
                                 aria: "Bonotech on X",
                             },
                             {
-                                label: "IG",
+                                icon: instagramIcon,
                                 href: "https://www.instagram.com/bonotechpteltd",
                                 aria: "Bonotech on Instagram",
                             },
                             {
-                                label: "FB",
+                                icon: facebookIcon,
                                 href: "https://www.facebook.com/bonotechpteltd",
                                 aria: "Bonotech on Facebook",
                             },
                             {
-                                label: "LI",
+                                icon: linkedInIcon,
                                 href: "https://www.linkedin.com/company/bonotechpteltd",
                                 aria: "Bonotech on LinkedIn",
                             },
-                        ].map((social) => (
-                            <a
-                                key={social.label}
-                                href={social.href}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                aria-label={`${social.aria} (opens in a new tab)`}
-                                className="group relative isolate grid h-[42px] w-[42px] place-items-center overflow-hidden rounded-full border border-[#DBC4F0]/25 text-[11px] font-medium text-[#E1C9F1] transition duration-300 hover:border-[#C797EF] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D9B4FC]"
-                            >
-                                <span className="absolute inset-0 -z-10 translate-y-[105%] rounded-full bg-[#642EAA] transition-transform duration-500 ease-out group-hover:translate-y-0" />
+                        ].map((social) => {
+                            const Icon = social.icon;
 
-                                <span>
-                                    {social.label}
-                                </span>
-                            </a>
-                        ))}
+                            return (
+                                <a
+                                    key={social.aria}
+                                    href={social.href}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    aria-label={`${social.aria} (opens in a new tab)`}
+                                    className="group relative isolate grid h-[42px] w-[42px] place-items-center overflow-hidden rounded-full border border-[#DBC4F0]/25 text-[#E1C9F1] transition duration-300 hover:border-[#C797EF] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D9B4FC]"
+                                >
+                                    <span
+                                        className="absolute inset-0 -z-10 translate-y-[105%] rounded-full bg-[#642EAA] transition-transform duration-500 ease-out group-hover:translate-y-0"
+                                    />
+
+                                    <img
+                                        src={social.icon}
+                                        alt=""
+                                        aria-hidden="true"
+                                        className="h-[16px] w-[16px] object-contain"
+                                    />
+                                </a>
+                            );
+                        })}
                     </nav>
                 </div>
             </div>
