@@ -257,9 +257,9 @@ const AboutImpactSection = () => {
                     </h2>
 
                     <p className="mx-auto mt-5 max-w-[570px] text-[15px] font-light leading-[1.55] tracking-[-0.025em] text-[#cec0dd] sm:text-base md:text-[17px]">
-                        A global consulting partner dedicated to building
+                        A global consulting partner dedicated to building{" "}
                         <br className="hidden sm:block" />
-                        smarter and more adaptive tech.
+                        {" "}smarter and more adaptive tech.
                     </p>
                 </header>
 

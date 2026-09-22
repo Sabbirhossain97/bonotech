@@ -272,7 +272,7 @@ const TechnologyStackSection = () => {
                     </h2>
 
                     <p className="mx-auto mt-5 max-w-[620px] text-[14px] font-light leading-[1.55] tracking-[-0.025em] text-[#afa6bd] sm:text-base">
-                        From mobile experiences to enterprise systems,
+                        From mobile experiences to enterprise systems,{" "}
                         <br className="hidden sm:block" />
                         we bring the right technologies together to build what your business needs.
                     </p>

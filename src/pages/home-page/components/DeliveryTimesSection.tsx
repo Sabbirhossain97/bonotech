@@ -156,9 +156,9 @@ const DeliveryTimesSection = () => {
                     </h2>
 
                     <p className="mx-auto mt-4 max-w-[480px] text-[13px] font-light leading-[1.5] tracking-[-0.025em] text-[#a99db3] sm:text-[14px]">
-                        These are Bonotech&apos;s average build times for websites,
+                        These are Bonotech&apos;s average build times for websites,{" "}
                         <br className="hidden sm:block" />
-                        mobile and web apps, and enterprise-grade software.
+                        {" "}mobile and web apps, and enterprise-grade software.
                     </p>
                 </header>
 

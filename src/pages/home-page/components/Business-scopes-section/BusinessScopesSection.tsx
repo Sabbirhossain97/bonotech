@@ -54,9 +54,9 @@ const BusinessScopesSection = () => {
                     </h2>
 
                     <p className="business-scopes-description">
-                        From the first idea to enterprise-wide transformation,
+                        From the first idea to enterprise-wide transformation,{" "}
                         <br />
-                        we meet your business where it is and build what comes next.
+                        {" "}we meet your business where it is and build what comes next.
                     </p>
                 </header>
 
