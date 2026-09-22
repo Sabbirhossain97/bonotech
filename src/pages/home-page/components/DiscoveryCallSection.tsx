@@ -350,7 +350,7 @@ const DiscoveryCallSection = () => {
 
                         <p className="mx-auto mt-5 max-w-[670px] text-[14px] font-light leading-[1.55] tracking-[-0.025em] text-[#AFA2BA] sm:text-[15px]">
                             Tell us what&apos;s slowing your business down—or what you want to
-                            build next.
+                            build next.{" "}
                             <br className="hidden sm:block" />
                             Let&apos;s map the opportunity, explore the right approach, and
                             define your next step.
