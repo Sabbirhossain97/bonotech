@@ -141,7 +141,7 @@ const DeliveryTimesSection = () => {
             <div className="relative z-10 mx-auto w-full max-w-[1200px]">
                 {/* Heading */}
                 <header className="mx-auto mb-[34px] max-w-[650px] text-center sm:mb-10 lg:mb-[38px]">
-                    <p className="mb-3 text-[10px] font-medium uppercase tracking-[0.18em] text-[#a994bd] sm:text-[11px]">
+                    <p className="mb-4 text-[11px] font-medium uppercase tracking-[0.16em] text-[#ae96c8] sm:mb-5 sm:text-xs">
                         Average Delivery Times
                     </p>
 
@@ -155,7 +155,7 @@ const DeliveryTimesSection = () => {
                         </span>
                     </h2>
 
-                    <p className="mx-auto mt-4 max-w-[480px] text-[13px] font-light leading-[1.5] tracking-[-0.025em] text-[#a99db3] sm:text-[14px]">
+                    <p className="mx-auto mt-4 max-w-[480px] text-[14px] font-light leading-[1.5] tracking-[-0.025em] text-[#afa6bd] sm:text-base">
                         These are Bonotech&apos;s average build times for websites,{" "}
                         <br className="hidden sm:block" />
                         {" "}mobile and web apps, and enterprise-grade software.
