@@ -1,7 +1,7 @@
 import bonotechLogo from "@/assets/bonotech-logo-mono2.png";
 import facebookIcon from "@/assets/footer/facebook.svg";
 import instagramIcon from "@/assets/footer/instagram.svg";
-import linkedInIcon from "@/assets/footer/instagram.svg";
+import linkedInIcon from "@/assets/footer/linkedin.svg";
 import twitterIcon from "@/assets/footer/twitter.svg";
 
 const Footer = () => {
@@ -279,7 +279,6 @@ const Footer = () => {
                                 aria: "Bonotech on LinkedIn",
                             },
                         ].map((social) => {
-                            const Icon = social.icon;
 
                             return (
                                 <a
