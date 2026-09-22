@@ -103,7 +103,7 @@ const Hero = () => {
               <br className="hidden lg:block" />
 
               <strong className="font-bold text-[#f9f5ff]">
-                technology
+                {" "}technology
               </strong>
 
               <span> around how</span>
