@@ -269,7 +269,7 @@ const TestimonialsSection = () => {
                                         alt={testimonial.name}
                                         loading="lazy"
                                         decoding="async"
-                                        className={`h-[34px] w-[110px] object-contain object-left ${testimonial.logoClassName ?? "brightness-0 invert opacity-90"}`}
+                                        className={`h-[34px] ${index === 0 ? 'w-0': 'w-[110px]'} object-contain object-left ${testimonial.logoClassName ?? "brightness-0 invert opacity-90"}`}
                                     />
 
                                     <span className="text-[10px] tracking-[0.02em] text-[#c9b8d8] sm:border-l sm:border-[#dac3ef]/25 sm:pl-4 sm:text-[11px]">
