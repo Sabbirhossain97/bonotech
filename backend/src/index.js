@@ -7,6 +7,13 @@ import helmet from "helmet";
 import nodemailer from "nodemailer";
 import path from "path";
 import { fileURLToPath } from "url";
+import {
+  appendAnalyticsEvent,
+  buildAnalyticsOverview,
+  isAdminAuthConfigured,
+  requireAdmin,
+  verifyAdminLogin,
+} from "./adminAnalytics.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = path.resolve(__dirname, "../data");
@@ -171,6 +178,7 @@ app.get("/health", (_req, res) => {
     ok: true,
     service: "bonotech-mail-api",
     mailConfigured: Boolean(getMail()),
+    adminConfigured: isAdminAuthConfigured(),
   });
 });
 
@@ -188,6 +196,65 @@ const newsletterLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   message: { message: "Failed", error: "Too many requests. Try again later." },
+});
+
+const analyticsLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 120,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { message: "Failed", error: "Too many requests. Try again later." },
+});
+
+const adminLoginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { message: "Failed", error: "Too many login attempts. Try again later." },
+});
+
+app.post("/analytics/event", analyticsLimiter, async (req, res) => {
+  try {
+    const result = await appendAnalyticsEvent(DATA_DIR, req.body ?? {});
+    if (!result.ok) {
+      res.status(400).json({ message: "Failed", error: result.error });
+      return;
+    }
+    res.json({ message: "Success" });
+  } catch (error) {
+    console.error("[bonotech-mail-api] analytics write failed:", error);
+    res.status(500).json({ message: "Failed" });
+  }
+});
+
+app.post("/admin/login", adminLoginLimiter, async (req, res) => {
+  try {
+    const result = await verifyAdminLogin(req.body?.email, req.body?.password);
+    if (!result.ok) {
+      res.status(401).json({ message: "Failed", error: result.error });
+      return;
+    }
+    res.json({ message: "Success", token: result.token, email: result.email });
+  } catch (error) {
+    console.error("[bonotech-mail-api] admin login failed:", error);
+    res.status(500).json({ message: "Failed" });
+  }
+});
+
+app.get("/admin/analytics/overview", requireAdmin, async (req, res) => {
+  try {
+    const range = String(req.query?.range || "7d");
+    const overview = await buildAnalyticsOverview(DATA_DIR, range);
+    res.json({ message: "Success", ...overview });
+  } catch (error) {
+    console.error("[bonotech-mail-api] analytics overview failed:", error);
+    res.status(500).json({ message: "Failed" });
+  }
+});
+
+app.get("/admin/me", requireAdmin, (req, res) => {
+  res.json({ message: "Success", email: req.admin?.email });
 });
 
 app.post("/newsletter", newsletterLimiter, async (req, res) => {
@@ -303,5 +370,8 @@ app.listen(PORT, HOST, () => {
   console.log(`[bonotech-mail-api] listening on http://${HOST}:${PORT}`);
   console.log(
     `[bonotech-mail-api] mail configured: ${Boolean(getMail()) ? "yes" : "no"}`,
+  );
+  console.log(
+    `[bonotech-mail-api] admin configured: ${isAdminAuthConfigured() ? "yes" : "no"}`,
   );
 });

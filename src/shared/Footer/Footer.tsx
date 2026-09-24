@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { FormEventHandler } from "react";
-import bonotechLogo from "@/assets/bonotech-logo-mono2.png";
+import bonotechLogo from "@/assets/bonotech-logo-white.svg";
+import { trackNewsletterSubscribe } from "@/lib/analytics";
 import {
     EmailSendError,
     subscribeNewsletter,
@@ -38,6 +39,7 @@ const Footer = () => {
 
         try {
             const result = await subscribeNewsletter(email);
+            trackNewsletterSubscribe();
             setStatus("success");
             setMessage(
                 result.alreadySubscribed

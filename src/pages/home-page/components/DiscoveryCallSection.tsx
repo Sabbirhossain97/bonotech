@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import type { FormEventHandler } from "react";
+import { trackDiscoverySubmit } from "@/lib/analytics";
 import {
     EmailSendError,
     sendDiscoveryCallEmail,
@@ -365,6 +366,7 @@ const DiscoveryCallSection = () => {
                 timeZone,
                 durationMinutes: 30,
             });
+            trackDiscoverySubmit();
 
             setConfirmedSummary({
                 name: form.fullName.trim(),

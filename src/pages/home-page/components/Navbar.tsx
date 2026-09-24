@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom'
 import { ArrowRight, X } from 'lucide-react'
 import { handleHashLinkClick } from '@/lib/scroll'
 import { cn } from '@/lib/utils'
-import bonotechLogo from '@/assets/bonotech-logo-mono2.png'
+import bonotechLogo from '@/assets/bonotech-logo-white.svg'
 import menuIcon from '@/assets/icons/menu-line-horizontal.svg'
 
 export interface NavLink {

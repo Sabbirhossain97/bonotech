@@ -1,9 +1,10 @@
 import { useState, useEffect, type MouseEvent } from 'react'
 import { useLocation } from 'react-router-dom'
 import { ArrowRight, X } from 'lucide-react'
+import { trackCtaClick } from '@/lib/analytics'
 import { handleHashLinkClick } from '@/lib/scroll'
 import { cn } from '@/lib/utils'
-import bonotechLogo from '@/assets/bonotech-logo-mono2.png'
+import bonotechLogo from '@/assets/bonotech-logo-white.svg'
 import menuIcon from '@/assets/icons/menu_bars_icon.svg'
 
 export interface NavLink {
@@ -104,41 +105,42 @@ export function Navbar({ links = DEFAULT_LINKS }: NavbarProps) {
                 >
                     <a
                         href="/"
-                        className="relative z-[60] h-6 w-auto max-w-[148px] shrink-0 sm:h-7 sm:max-w-[180px] lg:h-8 lg:max-w-[225px]"
+                        className="relative z-[60] flex h-[49px] w-auto max-w-[150px] shrink-0 items-center sm:max-w-[170px] lg:max-w-[190px]"
                         aria-label="Bonotech Home"
                     >
                         <img
                             src={bonotechLogo}
                             alt="Bonotech"
-                            className="h-full w-auto object-contain object-left"
+                            className="block h-[22px] w-auto object-contain object-left sm:h-6 lg:h-[26px]"
                         />
                     </a>
 
-                    <div className="hidden lg:flex items-center gap-5">
+                    <div className="hidden lg:flex h-[49px] items-center gap-5">
                         {links.map((link) => (
                             <a
                                 key={link.label}
                                 href={resolveHref(link)}
                                 download={link.download || undefined}
                                 onClick={(event) => handleNavLinkClick(event, link)}
-                                className="text-[17px] px-3 font-medium leading-[1.4] text-white transition-colors duration-200 hover:text-white/75"
+                                className="flex h-full items-center px-3 text-[17px] font-medium leading-none text-white transition-colors duration-200 hover:text-white/75"
                             >
                                 {link.label}
                             </a>
                         ))}
                     </div>
 
-                    <div className="max-w-[225px] flex justify-end w-full">
+                    <div className="hidden max-w-[225px] shrink-0 justify-end lg:flex">
                         <a
                             href={navHref('#discovery-call')}
-                            onClick={(event) =>
+                            onClick={(event) => {
+                                trackCtaClick('nav_contact_us')
                                 handleNavLinkClick(event, {
                                     label: 'Contact Us',
                                     href: '#discovery-call',
                                 })
-                            }
+                            }}
                             className={cn(
-                                "group hidden h-[49px] items-center gap-3 rounded-full py-[6px] pl-[25px] pr-[7px] text-[17px] font-medium leading-[1.4] text-white backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] lg:inline-flex",
+                                "group inline-flex h-[49px] items-center gap-3 rounded-full py-[6px] pl-[25px] pr-[7px] text-[17px] font-medium leading-none text-white backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]",
                                 isScrolled ? "bg-white/10 hover:bg-white/20" : "bg-white/13 hover:bg-white/20"
                             )}
                         >
@@ -224,12 +226,13 @@ export function Navbar({ links = DEFAULT_LINKS }: NavbarProps) {
                     >
                         <a
                             href={navHref('#discovery-call')}
-                            onClick={(event) =>
+                            onClick={(event) => {
+                                trackCtaClick('nav_contact_us_mobile')
                                 handleNavLinkClick(event, {
                                     label: 'Contact Us',
                                     href: '#discovery-call',
                                 })
-                            }
+                            }}
                             className="inline-flex items-center gap-3 bg-white text-[#131314] rounded-full pl-[24px] pr-[6px] py-[6px] text-label-lg hover:bg-white/90 transition-all duration-300"
                         >
                             Contact Us

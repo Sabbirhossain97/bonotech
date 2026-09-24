@@ -21,12 +21,29 @@ export default defineConfig({
   server: {
     host: 'localhost',
     proxy: {
-      // Local discovery/contact/newsletter → Bonotech mail API (or remote when unset).
+      // Local discovery/contact/newsletter/analytics → Bonotech mail API (or remote when unset).
+      // Keep /admin/* API paths explicit so the SPA /admin route is not swallowed.
       '/send-email': {
         target: process.env.VITE_EMAIL_PROXY_TARGET || 'http://127.0.0.1:8792',
         changeOrigin: true,
       },
       '/newsletter': {
+        target: process.env.VITE_EMAIL_PROXY_TARGET || 'http://127.0.0.1:8792',
+        changeOrigin: true,
+      },
+      '/analytics': {
+        target: process.env.VITE_EMAIL_PROXY_TARGET || 'http://127.0.0.1:8792',
+        changeOrigin: true,
+      },
+      '/admin/login': {
+        target: process.env.VITE_EMAIL_PROXY_TARGET || 'http://127.0.0.1:8792',
+        changeOrigin: true,
+      },
+      '/admin/me': {
+        target: process.env.VITE_EMAIL_PROXY_TARGET || 'http://127.0.0.1:8792',
+        changeOrigin: true,
+      },
+      '/admin/analytics': {
         target: process.env.VITE_EMAIL_PROXY_TARGET || 'http://127.0.0.1:8792',
         changeOrigin: true,
       },

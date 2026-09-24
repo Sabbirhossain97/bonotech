@@ -16,8 +16,9 @@ dist-ssr
 .env
 backend/.env
 
-# Newsletter subscriber store (written by the mail API)
+# Newsletter + analytics stores (written by the mail API)
 backend/data/newsletter-subscribers.json
+backend/data/analytics-events.jsonl
 
 # Editor directories and files
 .vscode/*
