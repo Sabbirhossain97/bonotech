@@ -1,0 +1,217 @@
+import "dotenv/config";
+import cors from "cors";
+import express from "express";
+import rateLimit from "express-rate-limit";
+import helmet from "helmet";
+import nodemailer from "nodemailer";
+
+const PORT = Number(process.env.PORT || 8792);
+const HOST = process.env.HOST || "127.0.0.1";
+
+const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || "")
+  .split(",")
+  .map((value) => value.trim())
+  .filter(Boolean);
+
+const ALLOWED_RECIPIENTS = new Set(
+  (process.env.ALLOWED_RECIPIENTS || "")
+    .split(",")
+    .map((value) => value.trim().toLowerCase())
+    .filter(Boolean),
+);
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const MAX_HTML_BYTES = 100_000;
+
+function parseRecipientList(value) {
+  if (Array.isArray(value)) {
+    return value
+      .flatMap((entry) => String(entry).split(","))
+      .map((entry) => entry.trim())
+      .filter(Boolean);
+  }
+
+  if (typeof value === "string") {
+    return value
+      .split(",")
+      .map((entry) => entry.trim())
+      .filter(Boolean);
+  }
+
+  return [];
+}
+
+function createTransport() {
+  const gmailUser = process.env.GMAIL_USER?.trim();
+  const gmailPass = process.env.GMAIL_APP_PASSWORD?.trim();
+
+  if (gmailUser && gmailPass) {
+    return {
+      transporter: nodemailer.createTransport({
+        service: "gmail",
+        auth: { user: gmailUser, pass: gmailPass },
+      }),
+      fromAddress: gmailUser,
+    };
+  }
+
+  const host = process.env.SMTP_HOST?.trim();
+  const user = process.env.SMTP_USER?.trim();
+  const pass = process.env.SMTP_PASS?.trim();
+
+  if (!host || !user || !pass) {
+    return null;
+  }
+
+  return {
+    transporter: nodemailer.createTransport({
+      host,
+      port: Number(process.env.SMTP_PORT || 587),
+      secure: process.env.SMTP_SECURE === "true",
+      auth: { user, pass },
+    }),
+    fromAddress: process.env.SMTP_FROM?.trim() || user,
+  };
+}
+
+let mail = null;
+
+function getMail() {
+  if (!mail) {
+    mail = createTransport();
+  }
+  return mail;
+}
+
+const fromName = process.env.MAIL_FROM_NAME?.trim() || "Bonotech Website";
+
+const app = express();
+
+app.set("trust proxy", 1);
+app.use(helmet({ contentSecurityPolicy: false }));
+app.use(
+  cors({
+    origin(origin, callback) {
+      if (!origin) {
+        callback(null, true);
+        return;
+      }
+
+      if (ALLOWED_ORIGINS.length === 0 || ALLOWED_ORIGINS.includes(origin)) {
+        callback(null, true);
+        return;
+      }
+
+      callback(new Error(`Origin not allowed: ${origin}`));
+    },
+  }),
+);
+app.use(express.json({ limit: "120kb" }));
+
+app.get("/health", (_req, res) => {
+  res.json({
+    ok: true,
+    service: "bonotech-mail-api",
+    mailConfigured: Boolean(getMail()),
+  });
+});
+
+const sendLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 30,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { message: "Failed", error: "Too many requests. Try again later." },
+});
+
+app.post("/send-email", sendLimiter, async (req, res) => {
+  try {
+    const mailConfig = getMail();
+
+    if (!mailConfig) {
+      res.status(503).json({
+        message: "Failed",
+        error: "Mail transport is not configured on the server.",
+      });
+      return;
+    }
+
+    const {
+      recepient,
+      recipient,
+      subject,
+      customHTML,
+      senderName,
+      senderEmail,
+    } = req.body ?? {};
+
+    const recipients = parseRecipientList(recepient ?? recipient);
+    const cleanSubject = String(subject ?? "").trim();
+    const html = String(customHTML ?? "");
+    const replyName = String(senderName ?? "").trim() || "Website visitor";
+    const replyEmail = String(senderEmail ?? "").trim();
+
+    if (recipients.length === 0) {
+      res.status(400).json({ message: "Failed", error: "Missing recipients." });
+      return;
+    }
+
+    if (!cleanSubject) {
+      res.status(400).json({ message: "Failed", error: "Missing subject." });
+      return;
+    }
+
+    if (!html.trim()) {
+      res.status(400).json({ message: "Failed", error: "Missing email body." });
+      return;
+    }
+
+    if (Buffer.byteLength(html, "utf8") > MAX_HTML_BYTES) {
+      res.status(400).json({ message: "Failed", error: "Email body too large." });
+      return;
+    }
+
+    for (const address of recipients) {
+      const normalized = address.toLowerCase();
+      if (!EMAIL_RE.test(address)) {
+        res.status(400).json({ message: "Failed", error: `Invalid recipient: ${address}` });
+        return;
+      }
+      if (ALLOWED_RECIPIENTS.size > 0 && !ALLOWED_RECIPIENTS.has(normalized)) {
+        res.status(403).json({ message: "Failed", error: "Recipient not allowed." });
+        return;
+      }
+    }
+
+    if (replyEmail && !EMAIL_RE.test(replyEmail)) {
+      res.status(400).json({ message: "Failed", error: "Invalid sender email." });
+      return;
+    }
+
+    await mailConfig.transporter.sendMail({
+      from: `"${fromName}" <${mailConfig.fromAddress}>`,
+      to: recipients.join(", "),
+      subject: cleanSubject,
+      html,
+      replyTo: replyEmail
+        ? `"${replyName.replace(/"/g, "")}" <${replyEmail}>`
+        : undefined,
+    });
+
+    res.json({ message: "Success" });
+  } catch (error) {
+    console.error("[bonotech-mail-api] send failed:", error);
+    res.status(500).json({ message: "Failed" });
+  }
+});
+
+app.use((_req, res) => {
+  res.status(404).json({ message: "Not found" });
+});
+
+app.listen(PORT, HOST, () => {
+  console.log(`[bonotech-mail-api] listening on http://${HOST}:${PORT}`);
+  console.log(
+    `[bonotech-mail-api] mail configured: ${Boolean(getMail()) ? "yes" : "no"}`,
+  );
+});
