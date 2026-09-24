@@ -9,6 +9,8 @@ import menuIcon from '@/assets/icons/menu_bars_icon.svg'
 export interface NavLink {
     label: string
     href: string
+    /** When set, the link downloads a file instead of navigating */
+    download?: string | boolean
 }
 
 export interface NavbarProps {
@@ -18,10 +20,14 @@ export interface NavbarProps {
 
 
 const DEFAULT_LINKS: NavLink[] = [
-    { label: 'About', href: '#sprint-numbers' },
     { label: 'Products', href: '#our-clients' },
     { label: 'Services', href: '#delivery-times' },
     { label: 'Testimonials', href: '#client-testimonials' },
+    {
+        label: 'Download Portfolio',
+        href: '/Bonotech-Portfolio.pdf',
+        download: 'Bonotech-Portfolio-V3.pdf',
+    },
 ]
 
 export function Navbar({ links = DEFAULT_LINKS }: NavbarProps) {
@@ -35,11 +41,21 @@ export function Navbar({ links = DEFAULT_LINKS }: NavbarProps) {
 
     const closeMenu = () => setMobileMenuOpen(false)
 
-    const handleNavLinkClick = (event: MouseEvent<HTMLAnchorElement>, href: string) => {
-        if (!isHome || !href.startsWith('#')) return
-        handleHashLinkClick(event, href)
+    const handleNavLinkClick = (
+        event: MouseEvent<HTMLAnchorElement>,
+        link: NavLink,
+    ) => {
+        if (link.download) {
+            closeMenu()
+            return
+        }
+        if (!isHome || !link.href.startsWith('#')) return
+        handleHashLinkClick(event, link.href)
         closeMenu()
     }
+
+    const resolveHref = (link: NavLink) =>
+        link.download ? link.href : navHref(link.href)
 
     useEffect(() => {
         const handleScroll = () => {
@@ -73,9 +89,9 @@ export function Navbar({ links = DEFAULT_LINKS }: NavbarProps) {
                     "fixed top-0 left-0 right-0 z-[60] w-full transition-all duration-300 ease-in-out border-b",
                     isHome
                         ? isScrolled
-                            ? "bg-[#020914]/80 backdrop-blur-md border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.3)]"
+                            ? "border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.3)] bg-[#020914]/80 backdrop-blur-md max-lg:bg-[rgba(2,9,20,0.45)] max-lg:backdrop-blur-xl max-lg:backdrop-saturate-150"
                             : "bg-transparent border-transparent"
-                        : "bg-[#020914]/80 backdrop-blur-md border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.3)]"
+                        : "border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.3)] bg-[#020914]/80 backdrop-blur-md max-lg:bg-[rgba(2,9,20,0.45)] max-lg:backdrop-blur-xl max-lg:backdrop-saturate-150"
                 )}
                 aria-label="Main navigation"
             >
@@ -85,11 +101,15 @@ export function Navbar({ links = DEFAULT_LINKS }: NavbarProps) {
                         isScrolled ? "h-[80px]" : "h-[104px]"
                     )}
                 >
-                    <a href="/" className="shrink-0 max-w-[225px] w-full h-[32px] relative z-[60]" aria-label="Bonotech Home">
+                    <a
+                        href="/"
+                        className="relative z-[60] h-6 w-auto max-w-[148px] shrink-0 sm:h-7 sm:max-w-[180px] lg:h-8 lg:max-w-[225px]"
+                        aria-label="Bonotech Home"
+                    >
                         <img
                             src={bonotechLogo}
                             alt="Bonotech"
-                            className="h-auto w-auto"
+                            className="h-full w-auto object-contain object-left"
                         />
                     </a>
 
@@ -97,9 +117,10 @@ export function Navbar({ links = DEFAULT_LINKS }: NavbarProps) {
                         {links.map((link) => (
                             <a
                                 key={link.label}
-                                href={navHref(link.href)}
-                                onClick={(event) => handleNavLinkClick(event, link.href)}
-                                className="text-[17px] px-3 font-semibold leading-[1.4] text-white transition-colors duration-200 hover:text-white/75"
+                                href={resolveHref(link)}
+                                download={link.download || undefined}
+                                onClick={(event) => handleNavLinkClick(event, link)}
+                                className="text-[17px] px-3 font-medium leading-[1.4] text-white transition-colors duration-200 hover:text-white/75"
                             >
                                 {link.label}
                             </a>
@@ -109,9 +130,14 @@ export function Navbar({ links = DEFAULT_LINKS }: NavbarProps) {
                     <div className="max-w-[225px] flex justify-end w-full">
                         <a
                             href={navHref('#discovery-call')}
-                            onClick={(event) => handleNavLinkClick(event, '#discovery-call')}
+                            onClick={(event) =>
+                                handleNavLinkClick(event, {
+                                    label: 'Contact Us',
+                                    href: '#discovery-call',
+                                })
+                            }
                             className={cn(
-                                "group hidden h-[49px] items-center gap-3 rounded-full py-[6px] pl-[25px] pr-[7px] text-[17px] font-semibold leading-[1.4] text-white backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] lg:inline-flex",
+                                "group hidden h-[49px] items-center gap-3 rounded-full py-[6px] pl-[25px] pr-[7px] text-[17px] font-medium leading-[1.4] text-white backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] lg:inline-flex",
                                 isScrolled ? "bg-white/10 hover:bg-white/20" : "bg-white/13 hover:bg-white/20"
                             )}
                         >
@@ -126,7 +152,7 @@ export function Navbar({ links = DEFAULT_LINKS }: NavbarProps) {
                     {/* Mobile Menu Toggle */}
                     <button
                         type="button"
-                        className="relative z-[60] flex h-11 w-11 shrink-0 items-center justify-center text-white lg:hidden"
+                        className="relative z-[60] flex h-9 w-9 shrink-0 items-center justify-center text-white sm:h-10 sm:w-10 lg:hidden"
                         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                         aria-expanded={mobileMenuOpen}
                         aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
@@ -137,7 +163,7 @@ export function Navbar({ links = DEFAULT_LINKS }: NavbarProps) {
                                 mobileMenuOpen ? 'opacity-100 rotate-0 scale-100' : 'opacity-0 rotate-90 scale-50'
                             )}
                         >
-                            <X className="h-7 w-7 text-white" />
+                            <X className="h-5 w-5 text-white sm:h-6 sm:w-6" />
                         </span>
                         <span
                             className={cn(
@@ -145,7 +171,7 @@ export function Navbar({ links = DEFAULT_LINKS }: NavbarProps) {
                                 mobileMenuOpen ? 'opacity-0 rotate-90 scale-50' : 'opacity-100 rotate-0 scale-100'
                             )}
                         >
-                            <img src={menuIcon} alt="" aria-hidden="true" className="h-7 w-7" />
+                            <img src={menuIcon} alt="" aria-hidden="true" className="h-5 w-5 sm:h-6 sm:w-6" />
                         </span>
                     </button>
                 </div>
@@ -170,9 +196,10 @@ export function Navbar({ links = DEFAULT_LINKS }: NavbarProps) {
                         {links.map((link, i) => (
                             <a
                                 key={link.label}
-                                href={navHref(link.href)}
-                                onClick={(event) => handleNavLinkClick(event, link.href)}
-                                className="text-white/90 font-semibold text-center hover:text-white transition-colors duration-200"
+                                href={resolveHref(link)}
+                                download={link.download || undefined}
+                                onClick={(event) => handleNavLinkClick(event, link)}
+                                className="text-white/90 font-medium text-center hover:text-white transition-colors duration-200"
                                 style={{
                                     fontSize: 'clamp(1.75rem, 6vw, 2.5rem)',
                                     lineHeight: 1.15,
@@ -196,7 +223,12 @@ export function Navbar({ links = DEFAULT_LINKS }: NavbarProps) {
                     >
                         <a
                             href={navHref('#discovery-call')}
-                            onClick={(event) => handleNavLinkClick(event, '#discovery-call')}
+                            onClick={(event) =>
+                                handleNavLinkClick(event, {
+                                    label: 'Contact Us',
+                                    href: '#discovery-call',
+                                })
+                            }
                             className="inline-flex items-center gap-3 bg-white text-[#131314] rounded-full pl-[24px] pr-[6px] py-[6px] text-label-lg hover:bg-white/90 transition-all duration-300"
                         >
                             Contact Us

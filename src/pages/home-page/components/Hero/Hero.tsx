@@ -1,143 +1,266 @@
+import { useEffect, useRef, useState } from "react";
 import FlowBackground from "./FlowBackground";
+import "./Hero.css";
+
+const ENGINEERING_LETTERS = "ENGINEERING".split("");
 
 const Hero = () => {
-  return (
-    <section
-      id="home"
-      aria-labelledby="hero-title"
-      className="relative isolate flex min-h-[800px] min-h-[100svh] overflow-hidden bg-[#160d29] px-[22px] sm:px-8 lg:px-[clamp(40px,3.15vw,64px)]"
-    >
-      {/* Animated background */}
-      <FlowBackground className="absolute inset-0 -z-30" />
+    const headlineRef = useRef<HTMLHeadingElement>(null);
+    const keyImageRef = useRef<HTMLImageElement>(null);
+    const keyFloatRef = useRef<Animation | null>(null);
+    const [heroReady, setHeroReady] = useState(false);
+    const [motionPaused, setMotionPaused] = useState(() =>
+        typeof window !== "undefined"
+            ? window.matchMedia("(prefers-reduced-motion: reduce)").matches
+            : false,
+    );
 
-      {/* Readability overlays */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-20 bg-[linear-gradient(180deg,rgba(17,9,30,0.19)_0%,rgba(17,9,30,0.04)_21%,rgba(17,9,30,0.30)_46%,rgba(17,9,30,0.16)_77%,rgba(17,9,30,0.42)_100%)]"
-      />
+    useEffect(() => {
+        const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (reduced) {
+            setHeroReady(true);
+            return;
+        }
 
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-20 bg-[linear-gradient(90deg,rgba(17,9,30,0.25)_0%,transparent_35%,transparent_65%,rgba(17,9,30,0.18)_100%)]"
-      />
+        // Wait one frame so opacity:0 paints, then kick the entrance animation.
+        const frame = requestAnimationFrame(() => setHeroReady(true));
+        return () => cancelAnimationFrame(frame);
+    }, []);
 
-      {/* Bottom fade into next section */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-[clamp(150px,25vh,280px)] bg-gradient-to-b from-transparent to-[var(--home-section-seam)]"
-      />
+    useEffect(() => {
+        const headline = headlineRef.current;
+        if (!headline) return;
 
-      <div className="mx-auto flex min-h-[800px] min-h-[100svh] w-full max-w-[1480px] flex-1 flex-col justify-center py-12 sm:py-14 lg:py-[clamp(50px,7vh,78px)]">
-        {/* Top composition */}
-        <div className="mx-auto grid w-full max-w-[1480px] grid-cols-1 items-center gap-7 md:grid-cols-[1fr_220px_1fr] md:items-start md:gap-6 lg:grid-cols-[1fr_minmax(250px,29%)_1fr] lg:gap-[clamp(30px,4vw,80px)]">
-          {/* Left copy */}
-          <div className="order-2 mx-auto max-w-[330px] text-center md:order-1 md:mx-0 md:mt-[clamp(5px,1.5vh,18px)] md:justify-self-end md:border-r md:border-[#ddcbf9]/40 md:pr-5 md:text-right lg:max-w-[360px]">
-            <p className="m-0 text-[16px] font-normal leading-[1.42] tracking-[-0.045em] text-[#e7e0f3] [text-shadow:0_2px_18px_rgba(15,5,30,0.65)] md:text-[16px] lg:text-[clamp(18px,1.36vw,23px)]">
-              Bonotech turns
-              <br />
-              <strong className="font-bold text-[#f9f5ff]">
-                business needs
-              </strong>
-              <br />
-              into{" "}
-              <strong className="font-bold text-[#f9f5ff]">
-                software
-              </strong>
-              <br />
-              built with{" "}
-              <strong className="font-bold text-[#f9f5ff]">
-                precision
-              </strong>
-              <br />
-              <strong className="font-bold text-[#f9f5ff]">
-                and speed.
-              </strong>
-            </p>
-          </div>
+        const measurement = document.createElement("canvas").getContext("2d");
+        if (!measurement) return;
 
-          {/* Home key */}
-          <div className="order-1 flex justify-center md:order-2 md:pt-[55px] lg:pt-[clamp(44px,6.5vh,76px)]">
-            <div className="relative isolate aspect-[1.115] w-[185px] rounded-[16%] sm:w-[205px] md:w-[205px] lg:w-[clamp(225px,18.3vw,302px)]">
-              <div
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-x-[7%] bottom-0 top-[12%] -z-10 translate-y-2 rounded-[22%] bg-[rgba(8,2,18,0.42)] blur-[12px] shadow-[0_14px_24px_rgba(7,1,16,0.4),0_30px_48px_rgba(7,1,16,0.26)]"
-              />
+        const fitHeadline = () => {
+            measurement.font = "700 100px Montserrat";
+            const widthAt100 =
+                measurement.measureText("OF EXCEPTIONAL").width - 4.5 * 13;
+            const size = (headline.clientWidth / widthAt100) * 100;
+            headline.style.fontSize = `${size}px`;
+        };
 
-              <img
-                src="/hero-section/home-key.png"
-                alt=""
-                aria-hidden="true"
-                draggable={false}
-                className="pointer-events-none absolute left-[-38.7%] top-[-27.4%] h-auto w-[180.8%] max-w-none select-none object-contain"
-              />
-            </div>
-          </div>
+        document.fonts.ready.then(fitHeadline);
+        const observer = new ResizeObserver(fitHeadline);
+        observer.observe(headline);
+        fitHeadline();
 
-          {/* Right copy */}
-          <div className="order-3 mx-auto max-w-[350px] text-center md:mx-0 md:mt-[clamp(5px,1.5vh,18px)] md:max-w-[320px] md:justify-self-start md:border-l md:border-[#ddcbf9]/40 md:pl-5 md:text-left lg:max-w-[390px]">
-            <p className="m-0 text-[16px] font-normal leading-[1.42] tracking-[-0.045em] text-[#e7e0f3] [text-shadow:0_2px_18px_rgba(15,5,30,0.65)] md:text-[16px] lg:text-[clamp(18px,1.36vw,23px)]">
-              From{" "}
-              <strong className="font-bold text-[#f9f5ff]">
-                custom software
-              </strong>
-              <br className="hidden lg:block" />
-              <span>
-                {" "}
-                to{" "}
-                <strong className="font-bold text-[#f9f5ff]">
-                  applied AI
-                </strong>
-                , we move fast,
-              </span>
+        return () => observer.disconnect();
+    }, []);
 
-              <br className="hidden lg:block" />
+    useEffect(() => {
+        const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
+        const handleChange = () => {
+            if (preference.matches) setMotionPaused(true);
+        };
+        preference.addEventListener("change", handleChange);
+        return () => preference.removeEventListener("change", handleChange);
+    }, []);
 
-              <span>
-                {" "}
-                refine faster and{" "}
-                <strong className="font-bold text-[#f9f5ff]">
-                  engineer
-                </strong>
-              </span>
+    useEffect(() => {
+        const keyImage = keyImageRef.current;
+        if (!keyImage) return;
 
-              <br className="hidden lg:block" />
+        const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-              <strong className="font-bold text-[#f9f5ff]">
-                {" "}technology
-              </strong>
+        const startKeyFloat = () => {
+            if (
+                reducedMotion.matches ||
+                !keyImage.animate ||
+                keyFloatRef.current?.effect?.getTiming().iterations === Infinity
+            ) {
+                return;
+            }
 
-              <span> around how</span>
+            const restingPose = getComputedStyle(keyImage).transform;
+            keyFloatRef.current?.cancel();
+            keyFloatRef.current = keyImage.animate(
+                [
+                    { transform: restingPose, easing: "ease-in-out" },
+                    {
+                        transform: "translate3d(0,-7px,0) rotateX(1deg) rotateY(-1deg)",
+                        easing: "ease-in-out",
+                    },
+                    { transform: restingPose },
+                ],
+                { duration: 4600, iterations: Infinity },
+            );
+        };
 
-              <br className="hidden lg:block" />
+        const stopKeyFloat = (immediate = false) => {
+            const current = keyFloatRef.current;
+            if (!current) return;
 
-              <span> businesses actually work.</span>
-            </p>
-          </div>
-        </div>
+            const currentPose = getComputedStyle(keyImage).transform;
+            current.cancel();
+            keyFloatRef.current = null;
 
-        {/* Main heading */}
-        <h1
-          id="hero-title"
-          aria-label="Home of exceptional engineering"
-          className="relative z-10 mt-10 w-full font-bold uppercase leading-[0.80] tracking-[-0.045em] [text-shadow:0_3px_40px_rgba(19,8,41,0.1)] sm:mt-11 md:mt-10 lg:mt-[clamp(30px,4.1vh,48px)]"
+            if (immediate) return;
+
+            const settle = keyImage.animate(
+                [{ transform: currentPose }, { transform: "none" }],
+                { duration: 650, easing: "cubic-bezier(.22,1,.36,1)" },
+            );
+            keyFloatRef.current = settle;
+            settle.onfinish = () => {
+                if (keyFloatRef.current === settle) keyFloatRef.current = null;
+            };
+        };
+
+        const key = keyImage.closest(".home-key");
+        if (!key) return;
+
+        const onEnter = (event: Event) => {
+            const pointerType = (event as PointerEvent).pointerType;
+            if (pointerType === "mouse" || pointerType === "pen") startKeyFloat();
+        };
+        const onLeave = () => {
+            if (!key.matches(":focus-visible")) stopKeyFloat();
+        };
+        const onFocus = () => {
+            if (key.matches(":focus-visible")) startKeyFloat();
+        };
+        const onBlur = () => {
+            if (!key.matches(":hover")) stopKeyFloat();
+        };
+        const onReduced = (event: MediaQueryListEvent) => {
+            if (event.matches) stopKeyFloat(true);
+        };
+
+        key.addEventListener("pointerenter", onEnter);
+        key.addEventListener("pointerleave", onLeave);
+        key.addEventListener("focus", onFocus);
+        key.addEventListener("blur", onBlur);
+        reducedMotion.addEventListener("change", onReduced);
+
+        return () => {
+            key.removeEventListener("pointerenter", onEnter);
+            key.removeEventListener("pointerleave", onLeave);
+            key.removeEventListener("focus", onFocus);
+            key.removeEventListener("blur", onBlur);
+            reducedMotion.removeEventListener("change", onReduced);
+            stopKeyFloat(true);
+        };
+    }, []);
+
+    return (
+        <section
+            id="home"
+            className={`hero${heroReady ? " is-ready" : ""}`}
+            aria-labelledby="hero-title"
         >
-          <span
-            aria-hidden="true"
-            className="block whitespace-nowrap text-center text-[clamp(2.0rem,9.06vw,8.5rem)] text-[#f9f7ff]"
-          >
-            OF EXCEPTIONAL
-          </span>
+            <div className="atmosphere" aria-hidden="true">
+                <div className="background-still" />
+                <FlowBackground className="flow-canvas" paused={motionPaused} />
+                <div className="readability" />
+            </div>
 
-          <span
-            aria-hidden="true"
-            className="mt-2 block whitespace-nowrap text-center text-[clamp(2.8rem,9.06vw,8.5rem)] text-[#ddd0fb]"
-          >
-            ENGINEERING
-          </span>
-        </h1>
-      </div>
-    </section>
-  );
+            <div className="hero-nav-spacer" aria-hidden="true" />
+
+            <div className="hero-composition">
+                <div className="introduction">
+                    <p className="intro-copy intro-left">
+                        Bonotech turns
+                        <br />
+                        <strong>business needs</strong>
+                        <br />
+                        into <strong>software</strong>
+                        <br />
+                        built with <strong>precision</strong>
+                        <br />
+                        <strong>and speed.</strong>
+                    </p>
+
+                    <div className="key-stage">
+                        <button
+                            className="home-key"
+                            type="button"
+                            aria-label="Home"
+                            title="Home"
+                        >
+                            <img
+                                ref={keyImageRef}
+                                src="/hero-section/home-key.png"
+                                alt=""
+                                width={2499}
+                                height={2132}
+                                fetchPriority="high"
+                                draggable={false}
+                            />
+                        </button>
+                    </div>
+
+                    <p className="intro-copy intro-right">
+                        From <strong>custom software</strong>
+                        <br />
+                        to <strong>applied AI</strong>, we move fast,
+                        <br />
+                        refine faster and <strong>engineer</strong>
+                        <br />
+                        <strong>technology</strong> around how
+                        <br />
+                        businesses actually work.
+                    </p>
+                </div>
+
+                <h1
+                    ref={headlineRef}
+                    id="hero-title"
+                    className="headline"
+                    aria-label="Home of exceptional engineering"
+                >
+                    <span className="title-line" aria-hidden="true">
+                        OF EXCEPTIONAL
+                    </span>
+                    <span className="engineering" aria-hidden="true">
+                        {ENGINEERING_LETTERS.map((letter, index) => (
+                            <span key={`${letter}-${index}`}>{letter}</span>
+                        ))}
+                    </span>
+                </h1>
+            </div>
+
+            <div className="hero-bottom">
+                <button
+                    id="motion-toggle"
+                    className="motion-toggle"
+                    type="button"
+                    aria-label={
+                        motionPaused
+                            ? "Play background animation"
+                            : "Pause background animation"
+                    }
+                    aria-pressed={motionPaused}
+                    title={
+                        motionPaused
+                            ? "Play background animation"
+                            : "Pause background animation"
+                    }
+                    onClick={() => setMotionPaused((value) => !value)}
+                >
+                    <svg
+                        className="pause-icon"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        aria-hidden="true"
+                    >
+                        <rect x="5" y="4" width="3" height="12" rx=".7" />
+                        <rect x="12" y="4" width="3" height="12" rx=".7" />
+                    </svg>
+                    <svg
+                        className="play-icon"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        aria-hidden="true"
+                    >
+                        <path d="M6 3.5 16 10 6 16.5z" />
+                    </svg>
+                </button>
+            </div>
+        </section>
+    );
 };
 
 export default Hero;

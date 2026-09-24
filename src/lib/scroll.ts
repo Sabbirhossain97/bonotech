@@ -1,5 +1,5 @@
-/** Matches `scroll-padding-top` on `html` in globals.css */
-const SCROLL_PADDING_TOP = 80
+/** Matches `--navbar-scroll-offset` / `scroll-padding-top` on `html` in globals.css */
+const SCROLL_PADDING_TOP = 96
 
 const LAYOUT_SETTLE_DELAYS_MS = [150, 500] as const
 
@@ -9,7 +9,8 @@ const SECTION_SCROLL_ALIGN: Partial<Record<string, ScrollAlign>> = {
     introduction: 'center',
     schedule: 'center',
     'what-we-do': 'center',
-    testimonials: 'center',
+    'our-clients': 'center',
+    'delivery-times': 'center',
     faq: 'center',
 }
 
@@ -35,6 +36,10 @@ function getScrollTop(el: HTMLElement, align: ScrollAlign) {
     return Math.max(minTop, Math.min(centeredTop, maxTop))
 }
 
+function setSectionScrolling(active: boolean) {
+    document.documentElement.classList.toggle('is-section-scrolling', active)
+}
+
 function scrollToElement(id: string, behavior: ScrollBehavior, align: ScrollAlign = 'start') {
     const el = document.getElementById(id)
     if (!el) return false
@@ -50,7 +55,10 @@ function scrollToElement(id: string, behavior: ScrollBehavior, align: ScrollAlig
  */
 export function scrollToSection(id: string, behavior: ScrollBehavior = 'smooth') {
     const align = SECTION_SCROLL_ALIGN[id] ?? 'start'
-    if (!scrollToElement(id, behavior, align)) return
+    if (!document.getElementById(id)) return
+
+    setSectionScrolling(true)
+    scrollToElement(id, behavior, align)
 
     requestAnimationFrame(() => {
         requestAnimationFrame(() => {
@@ -61,6 +69,8 @@ export function scrollToSection(id: string, behavior: ScrollBehavior = 'smooth')
     for (const delay of LAYOUT_SETTLE_DELAYS_MS) {
         window.setTimeout(() => scrollToElement(id, 'auto', align), delay)
     }
+
+    window.setTimeout(() => setSectionScrolling(false), 600)
 }
 
 /** Intercept in-page hash links so layout-settle re-scroll runs. */
@@ -77,4 +87,15 @@ export function handleHashLinkClick(
     scrollToSection(id)
     window.history.pushState(null, '', href)
     return true
+}
+
+/** Honor `#section` on first paint / hard refresh (native hash + snap can undershoot). */
+export function scrollToHashOnLoad() {
+    const hash = window.location.hash
+    if (!hash || hash.length < 2) return
+
+    const id = decodeURIComponent(hash.slice(1))
+    if (!document.getElementById(id)) return
+
+    scrollToSection(id, 'auto')
 }

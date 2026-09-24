@@ -1,3 +1,4 @@
+import { Navbar } from '@/shared/Navbar'
 import Hero from './components/Hero/Hero'
 import SprintMetricsSection from './components/SprintMetricsSection'
 import ClientShowcaseSection from './components/client-showcase-section/ClientShowcaseSection'
@@ -7,7 +8,6 @@ import DeliveryTimesSection from './components/DeliveryTimesSection'
 import TechnologyStackSection from './components/TechnologyStackSection'
 import TestimonialsSection from './components/TestimonialsSection'
 import DiscoveryCallSection from './components/DiscoveryCallSection'
-import { Navbar } from '@/shared/Navbar'
 import Footer from '@/shared/Footer/Footer'
 
 export function HomePage() {

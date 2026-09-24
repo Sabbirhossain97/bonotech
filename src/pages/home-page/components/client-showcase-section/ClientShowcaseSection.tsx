@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import "./ClientShowcaseSection.css";
-import SectionEdgeFade from "../SectionEdgeFade";
 
 import getMyGrailLogo from "@/assets/clients/get-my-grail.svg";
 import ditechLogo from "@/assets/clients/ditech.svg";
@@ -16,6 +15,7 @@ type Client = {
     className: string;
     width: number;
     height: number;
+    href: string;
 };
 
 type Movement = {
@@ -42,6 +42,7 @@ const clients: Client[] = [
         className: "logo-grail",
         width: 316,
         height: 141,
+        href: "https://divc-milio.web.app/",
     },
     {
         name: "DITECH",
@@ -49,6 +50,7 @@ const clients: Client[] = [
         className: "logo-ditech",
         width: 633,
         height: 120,
+        href: "https://www.ditech.co/",
     },
     {
         name: "Gustav",
@@ -56,6 +58,7 @@ const clients: Client[] = [
         className: "logo-gustav",
         width: 454,
         height: 134,
+        href: "https://gustav.club",
     },
     {
         name: "Olmo",
@@ -63,6 +66,7 @@ const clients: Client[] = [
         className: "logo-olmo",
         width: 422,
         height: 138,
+        href: "https://olmo.homes",
     },
     {
         name: "Dekko ISHO",
@@ -70,6 +74,7 @@ const clients: Client[] = [
         className: "logo-dekko",
         width: 362,
         height: 139,
+        href: "https://dekko-isho-group.web.app/",
     },
     {
         name: "EVO",
@@ -77,6 +82,7 @@ const clients: Client[] = [
         className: "logo-evo",
         width: 118,
         height: 138,
+        href: "https://evocardprep.com",
     },
     {
         name: "Polysignals",
@@ -84,6 +90,7 @@ const clients: Client[] = [
         className: "logo-polysignals",
         width: 643,
         height: 85,
+        href: "https://polysignals.app",
     },
 ];
 
@@ -127,6 +134,7 @@ const ClientShowcaseSection = () => {
         const renderedZIndices = new Array<number>(cards.length);
 
         section.classList.add("is-enhanced");
+        controls.hidden = false;
 
         const render = () => {
             const geometry = geometryRef.current;
@@ -421,7 +429,6 @@ const ClientShowcaseSection = () => {
             className="clients"
             aria-labelledby="clients-title"
         >
-            <SectionEdgeFade />
             <header className="clients-heading">
                 <p className="clients-eyebrow">
                     BRANDS WE&apos;VE BUILT WITH
@@ -456,17 +463,23 @@ const ClientShowcaseSection = () => {
                             className="client-logo"
                             data-brand={client.name}
                         >
-                            <div className="client-face">
+                            <a
+                                className="client-face"
+                                href={client.href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label={`Visit ${client.name} (opens in a new tab)`}
+                            >
                                 <img
                                     className={client.className}
                                     src={client.logo}
-                                    alt={client.name}
+                                    alt=""
                                     width={client.width}
                                     height={client.height}
                                     loading="lazy"
                                     decoding="async"
                                 />
-                            </div>
+                            </a>
                         </li>
                     ))}
                 </ul>
@@ -475,6 +488,7 @@ const ClientShowcaseSection = () => {
             <div
                 ref={controlsRef}
                 className="client-controls"
+                hidden
             >
                 <button
                     className="client-control"

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 import flutterLogo from "@/assets/technology/flutter.svg";
 import phpLogo from "@/assets/technology/php.svg";
@@ -21,50 +21,44 @@ import iosLogo from "@/assets/technology/ios.svg";
 import wordpressLogo from "@/assets/technology/wordpress.svg";
 import webflowLogo from "@/assets/technology/webflow.svg";
 import angularLogo from "@/assets/technology/angular.svg";
-import bonotechMark from "@/assets/technology/bonotech-mark.png";
-import SectionEdgeFade from "./SectionEdgeFade";
+import bonotechMark from "@/assets/technology/bonotech-mark-new.png";
+
+import "./TechnologyStackSection.css";
 
 type Technology = {
     name: string;
-    key: string;
+    className: string;
     logo: string;
-    imageClassName?: string;
-};
-
-type Connection = {
-    path: string;
 };
 
 const technologies: Technology[] = [
-    { name: "Flutter", key: "flutter", logo: flutterLogo },
-    { name: "PHP", key: "php", logo: phpLogo, imageClassName: "w-[70%]" },
-    { name: "Rails", key: "rails", logo: railsLogo },
-    { name: "Node.js", key: "nodejs", logo: nodejsLogo },
-    { name: "Java", key: "java", logo: javaLogo },
-    { name: "React", key: "react", logo: reactLogo },
-    { name: ".NET", key: "dotnet", logo: dotnetLogo },
-
-    { name: "Python", key: "python", logo: pythonLogo },
-    { name: "C#", key: "csharp", logo: csharpLogo },
-    { name: "Laravel", key: "laravel", logo: laravelLogo },
-    { name: "Moodle", key: "moodle", logo: moodleLogo },
-    { name: "Ionic", key: "ionic", logo: ionicLogo },
-    { name: "Golang", key: "golang", logo: golangLogo, imageClassName: "w-[70%]" },
-    { name: "Vue.js", key: "vuejs", logo: vueLogo },
-
-    { name: "Android", key: "android", logo: androidLogo },
-    { name: "C++", key: "cplusplus", logo: cppLogo },
-    { name: "JavaScript", key: "javascript", logo: javascriptLogo },
-    { name: "iOS", key: "ios", logo: iosLogo, imageClassName: "brightness-0 invert opacity-90" },
-    { name: "WordPress", key: "wordpress", logo: wordpressLogo, imageClassName: "brightness-0 invert opacity-90" },
-    { name: "Webflow", key: "webflow", logo: webflowLogo },
-    { name: "Angular", key: "angular", logo: angularLogo },
+    { name: "Flutter", className: "tech-flutter", logo: flutterLogo },
+    { name: "PHP", className: "tech-php", logo: phpLogo },
+    { name: "Rails", className: "tech-rails", logo: railsLogo },
+    { name: "Node.js", className: "tech-nodejs", logo: nodejsLogo },
+    { name: "Java", className: "tech-java", logo: javaLogo },
+    { name: "React", className: "tech-react", logo: reactLogo },
+    { name: ".NET", className: "tech-dotnet", logo: dotnetLogo },
+    { name: "Python", className: "tech-python", logo: pythonLogo },
+    { name: "C#", className: "tech-csharp", logo: csharpLogo },
+    { name: "Laravel", className: "tech-laravel", logo: laravelLogo },
+    { name: "Moodle", className: "tech-moodle", logo: moodleLogo },
+    { name: "Ionic", className: "tech-ionic", logo: ionicLogo },
+    { name: "Golang", className: "tech-golang", logo: golangLogo },
+    { name: "Vue.js", className: "tech-vuejs", logo: vueLogo },
+    { name: "Android", className: "tech-android", logo: androidLogo },
+    { name: "C++", className: "tech-cplusplus", logo: cppLogo },
+    { name: "JavaScript", className: "tech-javascript", logo: javascriptLogo },
+    { name: "iOS", className: "tech-ios", logo: iosLogo },
+    { name: "WordPress", className: "tech-wordpress", logo: wordpressLogo },
+    { name: "Webflow", className: "tech-webflow", logo: webflowLogo },
+    { name: "Angular", className: "tech-angular", logo: angularLogo },
 ];
 
 const orbitItems = [
-    { logo: flutterLogo, orbit: 0, duration: "79s", begin: "0s" },
-    { logo: phpLogo, orbit: 1, duration: "97s", begin: "-8s" },
-    { logo: railsLogo, orbit: 2, duration: "113s", begin: "-16s" },
+    { logo: flutterLogo, orbit: 0, duration: "79s", begin: "0.00s" },
+    { logo: phpLogo, orbit: 1, duration: "97s", begin: "-8.00s" },
+    { logo: railsLogo, orbit: 2, duration: "113s", begin: "-16.00s" },
     { logo: nodejsLogo, orbit: 0, duration: "79s", begin: "-11.29s" },
     { logo: javaLogo, orbit: 1, duration: "97s", begin: "-21.86s" },
     { logo: reactLogo, orbit: 2, duration: "113s", begin: "-32.14s" },
@@ -85,287 +79,309 @@ const orbitItems = [
     { logo: angularLogo, orbit: 2, duration: "113s", begin: "-112.86s" },
 ];
 
+const orbitGeometry: [number, number, number][] = [
+    [548, 620, 122],
+    [485, 636, 107],
+    [423, 652, 91],
+];
+
 const TechnologyStackSection = () => {
     const stageRef = useRef<HTMLDivElement | null>(null);
     const coreRef = useRef<HTMLDivElement | null>(null);
+    const connectionsSvgRef = useRef<SVGSVGElement | null>(null);
+    const orbitsSvgRef = useRef<SVGSVGElement | null>(null);
+    const wiresRef = useRef<SVGGElement | null>(null);
+    const signalsRef = useRef<SVGGElement | null>(null);
+    const orbitTrackRefs = useRef<(SVGPathElement | null)[]>([]);
     const nodeRefs = useRef<(HTMLLIElement | null)[]>([]);
-    const orbitSvgRef = useRef<SVGSVGElement | null>(null);
+    const connectionRefs = useRef<
+        {
+            wire: SVGPathElement;
+            signal: SVGPathElement;
+        }[]
+    >([]);
 
-    const [connections, setConnections] = useState<Connection[]>([]);
-    const [stageSize, setStageSize] = useState({ width: 1200, height: 780 });
-    const [activeTech, setActiveTech] = useState<number | null>(null);
-    const [isVisible, setIsVisible] = useState(false);
-    const [reducedMotion, setReducedMotion] = useState(false);
-
-    const calculateLayout = useCallback(() => {
+    useEffect(() => {
         const stage = stageRef.current;
         const core = coreRef.current;
+        const svg = connectionsSvgRef.current;
+        const orbits = orbitsSvgRef.current;
+        const wires = wiresRef.current;
+        const signals = signalsRef.current;
 
-        if (!stage || !core) return;
+        if (!stage || !core || !svg || !orbits || !wires || !signals) return;
 
-        const stageRect = stage.getBoundingClientRect();
-        const coreRect = core.getBoundingClientRect();
+        const ns = "http://www.w3.org/2000/svg";
 
-        const targetX = coreRect.left + coreRect.width / 2 - stageRect.left;
-        const targetY = coreRect.top + coreRect.height / 2 - stageRect.top;
+        const listenerCleanups: (() => void)[] = [];
 
-        const nextConnections = nodeRefs.current.map((node) => {
-            if (!node) {
-                return { path: "" };
-            }
+        connectionRefs.current = nodeRefs.current.map((node, index) => {
+            const wire = document.createElementNS(ns, "path");
+            const signal = document.createElementNS(ns, "path");
+            wire.setAttribute("class", "tech-wire");
+            signal.setAttribute("class", "tech-signal");
+            signal.setAttribute("pathLength", "100");
+            signal.style.setProperty("--wire-delay", `${-index * 0.61}s`);
+            wires.append(wire);
+            signals.append(signal);
 
-            const disc = node.querySelector("[data-tech-disc]") as HTMLElement | null;
-
-            if (!disc) {
-                return { path: "" };
-            }
-
-            const nodeRect = disc.getBoundingClientRect();
-
-            const x = nodeRect.left + nodeRect.width / 2 - stageRect.left;
-            const y = nodeRect.bottom - stageRect.top;
-
-            const controlY1 = y + Math.max(58, stageRect.height * 0.085);
-            const controlX2 = targetX + (x - targetX) * 0.13;
-            const controlY2 = targetY - Math.max(85, stageRect.height * 0.135);
-
-            return {
-                path: `M ${x} ${y} C ${x} ${controlY1}, ${controlX2} ${controlY2}, ${targetX} ${targetY}`,
+            const handleEnter = () => {
+                wire.classList.add("is-active");
+                signal.classList.add("is-active");
             };
+            const handleLeave = () => {
+                wire.classList.remove("is-active");
+                signal.classList.remove("is-active");
+            };
+
+            node?.addEventListener("pointerenter", handleEnter);
+            node?.addEventListener("pointerleave", handleLeave);
+            listenerCleanups.push(() => {
+                node?.removeEventListener("pointerenter", handleEnter);
+                node?.removeEventListener("pointerleave", handleLeave);
+            });
+
+            return { wire, signal };
         });
 
-        setStageSize({
-            width: stageRect.width,
-            height: stageRect.height,
-        });
+        const layout = () => {
+            const bounds = stage.getBoundingClientRect();
+            const hub = core.getBoundingClientRect();
 
-        setConnections(nextConnections);
-    }, []);
+            svg.setAttribute("viewBox", `0 0 ${bounds.width} ${bounds.height}`);
+            orbits.setAttribute("viewBox", `0 0 ${bounds.width} ${bounds.height}`);
 
-    useEffect(() => {
+            orbitTrackRefs.current.forEach((track, index) => {
+                if (!track) return;
+                const [radius, center, height] = orbitGeometry[index];
+                const cx = bounds.width / 2;
+                const rx = (bounds.width * radius) / 1200;
+                const cy = (bounds.height * center) / 780;
+                const ry =
+                    ((bounds.height * height) / 780) *
+                    (bounds.width < 600 ? 0.42 : 1);
+                track.setAttribute(
+                    "d",
+                    `M${cx - rx} ${cy}a${rx} ${ry} 0 1 0 ${rx * 2} 0a${rx} ${ry} 0 1 0 ${-rx * 2} 0`,
+                );
+            });
+
+            const targetX = hub.left + hub.width / 2 - bounds.left;
+            const targetY = hub.top + hub.height / 2 - bounds.top;
+
+            connectionRefs.current.forEach(({ wire, signal }, index) => {
+                const node = nodeRefs.current[index];
+                const disc = node?.querySelector(".tech-node-disc");
+
+                if (!disc) return;
+
+                const box = disc.getBoundingClientRect();
+                const x = box.left + box.width / 2 - bounds.left;
+                const y = box.bottom - bounds.top;
+                const d = `M${x},${y} C${x},${y + 80} ${targetX + (x - targetX) * 0.13},${targetY - 105} ${targetX},${targetY}`;
+                wire.setAttribute("d", d);
+                signal.setAttribute("d", d);
+            });
+        };
+
         const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
+        let visible = false;
 
-        const handlePreference = () => {
-            setReducedMotion(preference.matches);
-        };
-
-        handlePreference();
-
-        preference.addEventListener("change", handlePreference);
-
-        return () => {
-            preference.removeEventListener("change", handlePreference);
-        };
-    }, []);
-
-    useEffect(() => {
-        const stage = stageRef.current;
-
-        if (!stage) return;
-
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                setIsVisible(entry.isIntersecting);
-            },
-            { threshold: 0.05 },
-        );
-
-        observer.observe(stage);
-
-        return () => observer.disconnect();
-    }, []);
-
-    useEffect(() => {
-        const svg = orbitSvgRef.current;
-
-        if (!svg) return;
-
-        if (isVisible && !reducedMotion && !document.hidden) {
-            svg.unpauseAnimations?.();
-        } else {
-            svg.pauseAnimations?.();
-        }
-    }, [isVisible, reducedMotion]);
-
-    useEffect(() => {
-        const stage = stageRef.current;
-
-        if (!stage) return;
-
-        const runLayout = () => {
-            requestAnimationFrame(calculateLayout);
-        };
-
-        const observer = new ResizeObserver(runLayout);
-
-        observer.observe(stage);
-
-        document.fonts?.ready.then(runLayout);
-
-        window.addEventListener("resize", runLayout);
-
-        runLayout();
-
-        return () => {
-            observer.disconnect();
-            window.removeEventListener("resize", runLayout);
-        };
-    }, [calculateLayout]);
-
-    useEffect(() => {
-        const handleVisibility = () => {
-            const svg = orbitSvgRef.current;
-
-            if (!svg) return;
-
-            if (isVisible && !reducedMotion && !document.hidden) {
-                svg.unpauseAnimations?.();
-            } else {
-                svg.pauseAnimations?.();
+        const sync = () => {
+            const active = visible && !document.hidden;
+            stage.classList.toggle("is-visible", active);
+            if (typeof orbits.pauseAnimations === "function") {
+                if (active && !preference.matches) {
+                    orbits.unpauseAnimations();
+                } else {
+                    orbits.pauseAnimations();
+                }
             }
         };
 
-        document.addEventListener("visibilitychange", handleVisibility);
+        const observer =
+            "IntersectionObserver" in window
+                ? new IntersectionObserver(
+                      ([entry]) => {
+                          visible = entry.isIntersecting;
+                          sync();
+                      },
+                      { threshold: 0.05 },
+                  )
+                : null;
+
+        if (observer) {
+            observer.observe(stage);
+        } else {
+            visible = true;
+            sync();
+        }
+
+        preference.addEventListener("change", sync);
+        document.addEventListener("visibilitychange", sync);
+
+        const resizeObserver =
+            "ResizeObserver" in window
+                ? new ResizeObserver(layout)
+                : null;
+
+        if (resizeObserver) {
+            resizeObserver.observe(stage);
+        } else {
+            window.addEventListener("resize", layout, { passive: true });
+        }
+
+        document.fonts?.ready.then(layout);
+        layout();
+        sync();
 
         return () => {
-            document.removeEventListener("visibilitychange", handleVisibility);
+            observer?.disconnect();
+            resizeObserver?.disconnect();
+            window.removeEventListener("resize", layout);
+            preference.removeEventListener("change", sync);
+            document.removeEventListener("visibilitychange", sync);
+            listenerCleanups.forEach((cleanup) => cleanup());
+            connectionRefs.current.forEach(({ wire, signal }) => {
+                wire.remove();
+                signal.remove();
+            });
+            connectionRefs.current = [];
         };
-    }, [isVisible, reducedMotion]);
-
-    const orbitGeometry = [
-        { radius: 548, centerY: 620, height: 122 },
-        { radius: 485, centerY: 636, height: 107 },
-        { radius: 423, centerY: 652, height: 91 },
-    ];
-
-    const getOrbitPath = (index: number) => {
-        const geometry = orbitGeometry[index];
-
-        const cx = stageSize.width / 2;
-        const rx = (stageSize.width * geometry.radius) / 1200;
-        const cy = (stageSize.height * geometry.centerY) / 780;
-
-        const mobileFlatten = stageSize.width < 600 ? 0.42 : 1;
-        const ry = (stageSize.height * geometry.height) / 780 * mobileFlatten;
-
-        return `M ${cx - rx} ${cy} a ${rx} ${ry} 0 1 0 ${rx * 2} 0 a ${rx} ${ry} 0 1 0 ${-rx * 2} 0`;
-    };
+    }, []);
 
     return (
-        <section id="our-technology" aria-labelledby="technology-title" className="relative isolate min-h-screen overflow-hidden bg-[linear-gradient(180deg,#0d0716_0%,#10091b_28%,#12081e_100%)] px-5 pb-12 pt-20 text-white sm:px-6 sm:pt-24 lg:px-8 lg:pb-[70px] lg:pt-[105px]">
-            <SectionEdgeFade />
-            {/* subtle atmosphere */}
-            <div aria-hidden="true" className="pointer-events-none absolute left-1/2 top-[64%] -z-10 h-[60%] w-[90%] -translate-x-1/2 -translate-y-1/2 rounded-[50%] bg-[radial-gradient(ellipse_at_center,rgba(99,45,182,.24)_0%,rgba(75,24,133,.13)_40%,transparent_72%)] blur-[35px]" />
-
-            <div className="relative z-10 mx-auto w-full max-w-[1200px]">
-                {/* Heading */}
-                <header className="relative z-20 mx-auto mb-[28px] max-w-[950px] text-center lg:mb-[34px]">
-                    <p className="mb-4 text-[11px] font-medium uppercase tracking-[0.16em] text-[#ae96c8] sm:mb-5 sm:text-xs">
-                        Our Technology Stack
-                    </p>
-
-                    <h2 id="technology-title" className="m-0 text-[38px] font-light leading-[1.04] tracking-[-0.055em] text-[#faf7ff] sm:text-[48px] md:text-[56px] lg:text-[60px]">
-                        The Right Tools
-                        <span className="mt-1 block font-semibold text-[#bda2e5]">
-                            Built Around Your Business
-                        </span>
-                    </h2>
-
-                    <p className="mx-auto mt-5 max-w-[620px] text-[14px] font-light leading-[1.55] tracking-[-0.025em] text-[#afa6bd] sm:text-base">
-                        From mobile experiences to enterprise systems,{" "}
-                        <br className="hidden sm:block" />
-                        we bring the right technologies together to build what your business needs.
-                    </p>
-                </header>
-
-                {/* Main technology stage */}
-                <div ref={stageRef} className="relative isolate mx-auto h-[590px] w-full max-w-[1200px] sm:h-[650px] md:h-[700px] lg:h-[760px]">
-                    {/* Ground glow */}
-                    <div aria-hidden="true" className="pointer-events-none absolute left-[8%] right-[8%] top-[47%] z-0 h-[52%] rounded-[50%] bg-[radial-gradient(ellipse_at_center,rgba(100,44,182,.28)_0%,rgba(75,24,133,.17)_32%,transparent_68%)] blur-[4px]" />
-
-                    {/* Connections */}
-                    <svg aria-hidden="true" className="pointer-events-none absolute inset-0 z-[1] h-full w-full overflow-visible" viewBox={`0 0 ${stageSize.width} ${stageSize.height}`} preserveAspectRatio="none">
-                        <defs>
-                            <linearGradient id="technology-wire-gradient" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="0%" stopColor="#8651cf" stopOpacity="0.25" />
-                                <stop offset="40%" stopColor="#b987f4" />
-                                <stop offset="65%" stopColor="#f0dcff" />
-                                <stop offset="100%" stopColor="#8954d7" stopOpacity="0.3" />
-                            </linearGradient>
-                        </defs>
-
-                        {connections.map((connection, index) => (
-                            <g key={`connection-${index}`}>
-                                <path d={connection.path} fill="none" stroke={activeTech === index ? "rgba(186,131,250,.6)" : "rgba(156,98,216,.23)"} strokeWidth={activeTech === index ? 1.5 : 1} className="transition-all duration-300" />
-
-                                {!reducedMotion && (
-                                    <path d={connection.path} pathLength="100" fill="none" stroke="url(#technology-wire-gradient)" strokeWidth={activeTech === index ? 2.6 : 1.6} strokeLinecap="round" strokeDasharray="14 106" opacity={activeTech === index ? 0.95 : 0.45}>
-                                        <animate attributeName="stroke-dashoffset" values="120;0" dur="6.5s" begin={`${-index * 0.61}s`} repeatCount="indefinite" />
-                                        <animate attributeName="opacity" values="0;0.75;0.85;0" keyTimes="0;0.15;0.8;1" dur="6.5s" begin={`${-index * 0.61}s`} repeatCount="indefinite" />
-                                    </path>
-                                )}
+        <section
+            id="our-technology"
+            className="technology"
+            aria-labelledby="technology-title"
+        >
+            <header className="technology-heading">
+                <p className="technology-eyebrow">OUR TECHNOLOGY STACK</p>
+                <h2 id="technology-title">
+                    The Right Tools
+                    <span>Built Around Your Business</span>
+                </h2>
+                <p className="technology-description">
+                    From mobile experiences to enterprise systems,
+                    <br />
+                    we bring the right technologies together to build what your
+                    business needs.
+                </p>
+            </header>
+            <div ref={stageRef} className="tech-stage">
+                <div className="tech-ground-glow" aria-hidden="true" />
+                <svg
+                    ref={connectionsSvgRef}
+                    className="tech-connections"
+                    aria-hidden="true"
+                    focusable="false"
+                >
+                    <defs>
+                        <linearGradient
+                            id="technology-connection-light"
+                            x1="0"
+                            y1="0"
+                            x2="0"
+                            y2="1"
+                        >
+                            <stop offset="0" stopColor="#8651cf" stopOpacity="0.25" />
+                            <stop offset="0.4" stopColor="#b987f4" />
+                            <stop offset="0.65" stopColor="#f0dcff" />
+                            <stop offset="1" stopColor="#8954d7" stopOpacity="0.3" />
+                        </linearGradient>
+                    </defs>
+                    <g ref={wiresRef} className="tech-wires" />
+                    <g ref={signalsRef} className="tech-signals" />
+                </svg>
+                <ul className="tech-nodes" aria-label="Technologies we work with">
+                    {technologies.map((technology, index) => (
+                        <li
+                            key={technology.className}
+                            ref={(element) => {
+                                nodeRefs.current[index] = element;
+                            }}
+                            className={`tech-node ${technology.className}`}
+                            data-tech={technology.className.replace("tech-", "")}
+                        >
+                            <span className="tech-node-disc">
+                                <img
+                                    src={technology.logo}
+                                    alt=""
+                                    width={40}
+                                    height={40}
+                                    loading="lazy"
+                                    decoding="async"
+                                />
+                            </span>
+                            <span className="tech-node-name">{technology.name}</span>
+                        </li>
+                    ))}
+                </ul>
+                <svg
+                    ref={orbitsSvgRef}
+                    className="tech-orbits"
+                    viewBox="0 0 1200 780"
+                    preserveAspectRatio="none"
+                    aria-hidden="true"
+                    focusable="false"
+                >
+                    <defs>
+                        <linearGradient
+                            id="technology-orbit-ink"
+                            x1="0%"
+                            y1="0%"
+                            x2="0%"
+                            y2="100%"
+                        >
+                            <stop offset="0" stopColor="#6d419f" stopOpacity="0.12" />
+                            <stop offset="0.6" stopColor="#9262c9" stopOpacity="0.58" />
+                            <stop offset="1" stopColor="#b683ea" stopOpacity="0.85" />
+                        </linearGradient>
+                    </defs>
+                    <g className="tech-orbit-tracks">
+                        {[0, 1, 2].map((index) => (
+                            <path
+                                key={`orbit-track-${index}`}
+                                ref={(element) => {
+                                    orbitTrackRefs.current[index] = element;
+                                }}
+                                id={`technology-orbit-${index}`}
+                                d="M52 620a548 122 0 1 0 1096 0a548 122 0 1 0 -1096 0"
+                            />
+                        ))}
+                    </g>
+                    <g className="tech-orbit-logos">
+                        {orbitItems.map((item, index) => (
+                            <g key={`orbit-logo-${index}`} className="tech-orbit-symbol">
+                                <image
+                                    href={item.logo}
+                                    x={-10}
+                                    y={-10}
+                                    width={20}
+                                    height={20}
+                                />
+                                <animateMotion
+                                    dur={item.duration}
+                                    begin={item.begin}
+                                    repeatCount="indefinite"
+                                >
+                                    <mpath href={`#technology-orbit-${item.orbit}`} />
+                                </animateMotion>
                             </g>
                         ))}
-                    </svg>
-
-                    {/* Technology nodes */}
-                    <ul aria-label="Technologies we work with" className="relative z-[3] mx-auto grid w-full max-w-[780px] grid-cols-7 gap-x-1 gap-y-4 px-0 pt-2 sm:gap-x-3 sm:gap-y-[18px] sm:pt-4 md:w-[88%] md:gap-x-5 lg:w-[76%] lg:gap-x-[26px] lg:gap-y-5">
-                        {technologies.map((technology, index) => (
-                            <li
-                                key={technology.key}
-                                ref={(element) => {
-                                    nodeRefs.current[index] = element;
-                                }}
-                                onPointerEnter={() => setActiveTech(index)}
-                                onPointerLeave={() => setActiveTech(null)}
-                                className="group flex min-w-0 flex-col items-center gap-[5px] sm:gap-2"
-                            >
-                                <span data-tech-disc className="grid h-[38px] w-[38px] place-items-center rounded-full border border-[#b694e5]/10 bg-[radial-gradient(circle_at_30%_18%,#382548_0%,#23172f_70%)] shadow-[inset_0_1px_0_rgba(225,195,255,.04)] transition-all duration-300 group-hover:-translate-y-[3px] group-hover:border-[#ad7be1]/50 group-hover:bg-[#30203f] group-hover:shadow-[0_0_24px_rgba(153,85,217,.16)] sm:h-[48px] sm:w-[48px] md:h-14 md:w-14 lg:h-[62px] lg:w-[62px]">
-                                    <img src={technology.logo} alt="" loading="lazy" decoding="async" className={`h-[58%] w-[58%] object-contain sm:h-8 sm:w-8 lg:h-[35px] lg:w-[35px] ${technology.imageClassName ?? ""}`} />
-                                </span>
-
-                                <span className="whitespace-nowrap rounded-[3px] bg-[#10091b]/90 px-[2px] py-[1px] text-center text-[7px] leading-tight tracking-[-0.03em] text-[#b3a3c3] transition-colors duration-300 group-hover:text-[#f2e3ff] sm:px-1 sm:text-[9px] md:text-[10px] lg:text-[11px]">
-                                    {technology.name}
-                                </span>
-                            </li>
-                        ))}
-                    </ul>
-
-                    {/* Orbit tracks */}
-                    <svg ref={orbitSvgRef} aria-hidden="true" focusable="false" className="pointer-events-none absolute inset-0 z-[2] h-full w-full overflow-visible" viewBox={`0 0 ${stageSize.width} ${stageSize.height}`} preserveAspectRatio="none">
-                        <defs>
-                            <linearGradient id="technology-orbit-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" stopColor="#6d419f" stopOpacity="0.12" />
-                                <stop offset="60%" stopColor="#9262c9" stopOpacity="0.58" />
-                                <stop offset="100%" stopColor="#b683ea" stopOpacity="0.85" />
-                            </linearGradient>
-                        </defs>
-
-                        {[0, 1, 2].map((index) => (
-                            <path key={`orbit-${index}`} id={`technology-orbit-${index}`} d={getOrbitPath(index)} fill="none" stroke="url(#technology-orbit-gradient)" strokeWidth="1.1" />
-                        ))}
-
-                        {!reducedMotion &&
-                            orbitItems.map((item, index) => (
-                                <g key={`orbit-logo-${index}`} opacity="0.26">
-                                    <image href={item.logo} x="-9" y="-9" width="18" height="18" opacity="0.65" />
-                                    <animateMotion dur={item.duration} begin={item.begin} repeatCount="indefinite">
-                                        <mpath href={`#technology-orbit-${item.orbit}`} />
-                                    </animateMotion>
-                                </g>
-                            ))}
-                    </svg>
-
-                    {/* Bonotech core */}
-                    <div ref={coreRef} className="absolute left-1/2 top-[70%] z-[4] flex aspect-square w-[138px] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center gap-2 rounded-full border border-[#bb85ff]/20 bg-[radial-gradient(circle_at_38%_28%,#7040ae_0%,#42217b_44%,#32145c_74%,#1f103b_100%)] shadow-[inset_0_1px_2px_rgba(214,179,255,.13),inset_0_-10px_32px_rgba(32,7,55,.49),0_0_75px_rgba(130,55,210,.32),0_28px_80px_rgba(88,35,141,.22)] sm:w-[155px] md:w-[175px] lg:top-[69.5%] lg:w-[190px]">
-                        <div aria-hidden="true" className="pointer-events-none absolute -inset-[22%] -z-10 rounded-full bg-[radial-gradient(circle,rgba(174,98,255,.15)_0%,transparent_66%)] blur-[2px]" />
-
-                        <img src={bonotechMark} alt="Bonotech" loading="lazy" decoding="async" className="h-[52%] w-[36%] object-contain drop-shadow-[0_0_10px_rgba(231,198,255,.4)]" />
-
-                        <span className="text-[7px] tracking-[0.19em] text-[#e0ccf5] sm:text-[8px] lg:text-[10px]">
-                            BONOTECH
-                        </span>
-                    </div>
+                    </g>
+                </svg>
+                <div ref={coreRef} className="tech-core">
+                    <img
+                        src={bonotechMark}
+                        alt="Bonotech"
+                        width={90}
+                        height={70}
+                        loading="lazy"
+                        decoding="async"
+                    />
+                    <span aria-hidden="true">BONOTECH</span>
                 </div>
             </div>
         </section>

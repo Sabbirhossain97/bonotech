@@ -1,8 +1,5 @@
 import bonotechLogo from "@/assets/bonotech-logo-mono2.png";
-import facebookIcon from "@/assets/footer/facebook.svg";
-import instagramIcon from "@/assets/footer/instagram.svg";
-import linkedInIcon from "@/assets/footer/linkedin.svg";
-import twitterIcon from "@/assets/footer/twitter.svg";
+import "./footer.css";
 
 const Footer = () => {
     const currentYear = new Date().getFullYear();
@@ -15,165 +12,101 @@ const Footer = () => {
     };
 
     return (
-        <footer
-            id="footer"
-            aria-label="Bonotech footer"
-            className="relative isolate overflow-hidden bg-[#12091D] px-4 pb-6 pt-16 text-[#F7F0FF] sm:px-6 sm:pt-20 lg:px-8"
-        >
-            {/* Background atmosphere */}
-            <div
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-0 -z-20 bg-[#12091D]"
-            />
+        <footer id="footer" className="site-footer" aria-label="Bonotech footer">
+            <div className="footer-atmosphere" aria-hidden="true" />
 
-            <div
-                aria-hidden="true"
-                className="pointer-events-none absolute left-1/2 top-[45%] -z-10 h-[90%] w-[130%] -translate-x-1/2 -translate-y-1/2 rounded-[50%] bg-[radial-gradient(ellipse_at_center,rgba(76,36,112,0.20)_0%,rgba(48,24,72,0.13)_40%,transparent_72%)] blur-[70px]"
-            />
-
-            <div
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[130px] bg-gradient-to-b from-[#09060E] via-[#0D0714]/75 to-transparent"
-            />
-
-            <div
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-[120px] bg-gradient-to-t from-[#09060E] via-[#0D0714]/55 to-transparent"
-            />
-
-            {/* Main panel */}
-            <div className="mx-auto w-full max-w-[1360px] overflow-hidden rounded-[5px] border border-[#EEE1FF]/25 bg-[linear-gradient(135deg,rgba(241,230,255,0.14),rgba(205,180,249,0.04)_45%,rgba(27,16,43,0.27)),rgba(22,12,40,0.54)] shadow-[inset_0_1px_0_rgba(255,244,255,0.21),inset_0_-1px_0_rgba(222,196,251,0.08),0_14px_50px_rgba(6,2,14,0.30)] backdrop-blur-[26px] backdrop-saturate-[1.3]">
-                {/* Top area */}
-                <div className="grid grid-cols-1 gap-10 px-6 py-8 sm:px-8 sm:py-10 md:grid-cols-2 lg:grid-cols-[1.12fr_.86fr_1fr_1.02fr] lg:gap-[44px] lg:px-12 lg:py-12">
-                    {/* Brand */}
-                    <div className="min-w-0">
+            <div className="footer-panel">
+                <div className="footer-main">
+                    <div className="footer-brand">
                         <a
+                            className="footer-brand-link"
                             href="#home"
                             aria-label="Bonotech — back to home"
-                            className="inline-flex"
                         >
-                            <img
-                                src={bonotechLogo}
-                                alt="Bonotech"
-                                className="h-auto w-[205px] max-w-full"
-                            />
+                            <img src={bonotechLogo} alt="Bonotech" />
                         </a>
-
-                        <p className="mt-4 max-w-[26ch] text-[16px] font-light leading-[1.65] tracking-[-0.045em] text-[#D4C5E0] sm:text-[17px]">
+                        <p>
                             Building innovative digital products that help businesses
                             transition into the age of AI.
                         </p>
                     </div>
 
-                    {/* Explore */}
                     <nav
+                        className="footer-explore"
                         aria-labelledby="footer-explore-title"
-                        className="min-w-0"
                     >
-                        <h2
-                            id="footer-explore-title"
-                            className="mb-5 text-[11px] font-semibold uppercase leading-[1.5] tracking-[0.105em] text-[#EBDDF6]"
-                        >
+                        <h2 id="footer-explore-title" className="footer-label">
                             Explore
                         </h2>
-
-                        <ul className="flex list-none flex-col items-start gap-[15px] p-0">
+                        <ul>
+                            <li>
+                                <a href="#about-bonotech">About Bonotech</a>
+                            </li>
+                            <li>
+                                <a href="#ways-in">Our Service Scope</a>
+                            </li>
+                            <li>
+                                <a href="#delivery-times">Average Delivery Times</a>
+                            </li>
+                            <li>
+                                <a href="#our-technology">Our Technology</a>
+                            </li>
+                            <li>
+                                <a href="#client-testimonials">Client Testimonials</a>
+                            </li>
                             <li>
                                 <a
-                                    href="#sprint-numbers"
-                                    className="text-[12px] leading-[1.6] tracking-[-0.025em] text-[#CBB9DB] transition-colors hover:text-[#FFF3FF]"
+                                    href="/Bonotech-Portfolio.pdf"
+                                    download="Bonotech-Portfolio-V3.pdf"
                                 >
-                                    About
+                                    Download Portfolio
                                 </a>
                             </li>
-
                             <li>
                                 <a
-                                    href="#our-clients"
-                                    className="text-[12px] leading-[1.6] tracking-[-0.025em] text-[#CBB9DB] transition-colors hover:text-[#FFF3FF]"
+                                    className="footer-discovery-link"
+                                    href="#discovery-call"
                                 >
-                                    Products
-                                </a>
-                            </li>
-
-                            <li>
-                                <a
-                                    href="#delivery-times"
-                                    className="text-[12px] leading-[1.6] tracking-[-0.025em] text-[#CBB9DB] transition-colors hover:text-[#FFF3FF]"
-                                >
-                                    Services
-                                </a>
-                            </li>
-
-                            <li>
-                                <a
-                                    href="#client-testimonials"
-                                    className="text-[12px] leading-[1.6] tracking-[-0.025em] text-[#CBB9DB] transition-colors hover:text-[#FFF3FF]"
-                                >
-                                    Testimonials
+                                    Book a Discovery Call{" "}
+                                    <span aria-hidden="true">↗</span>
                                 </a>
                             </li>
                         </ul>
                     </nav>
 
-                    {/* Contact */}
-                    <div className="min-w-0">
-                        <h2 className="mb-5 text-[11px] font-semibold uppercase leading-[1.5] tracking-[0.105em] text-[#EBDDF6]">
-                            Get in Touch
-                        </h2>
-
-                        <a
-                            href="mailto:contact@bonotech.io"
-                            className="block w-fit break-all text-[14px] font-medium text-[#EAD2FC] transition-colors hover:text-white sm:text-[15px]"
-                        >
+                    <div className="footer-contact">
+                        <h2 className="footer-label">Get in Touch</h2>
+                        <a className="footer-email" href="mailto:contact@bonotech.io">
                             contact@bonotech.io
                         </a>
-
-                        <a
-                            href="tel:+447551829217"
-                            className="mt-[10px] inline-block text-[12px] leading-[1.6] tracking-[-0.025em] text-[#CBB9DB] transition-colors hover:text-white"
-                        >
+                        <a className="footer-phone" href="tel:+447551829217">
                             +44 7551 829217
                         </a>
-
-                        <address className="mt-7 flex flex-col gap-[5px] text-[11px] not-italic leading-[1.6] tracking-[-0.015em] text-[#C7B5D7]">
-                            <strong className="mb-1 text-[10px] font-semibold tracking-[0.005em] text-[#DFCFEA]">
-                                BONOTECH HOLDINGS PTE. LTD.
-                            </strong>
-
+                        <address>
+                            <strong>BONOTECH HOLDINGS PTE. LTD.</strong>
                             <span>111 SOMERSET ROAD #08-10A</span>
                             <span>Singapore 238164</span>
                         </address>
                     </div>
 
-                    {/* Newsletter */}
-                    <div className="min-w-0">
-                        <h2
-                            id="footer-newsletter-title"
-                            className="mb-5 text-[11px] font-semibold uppercase leading-[1.5] tracking-[0.105em] text-[#EBDDF6]"
-                        >
+                    <div
+                        className="footer-newsletter"
+                        aria-labelledby="footer-newsletter-title"
+                    >
+                        <h2 id="footer-newsletter-title" className="footer-label">
                             Stay in the Loop
                         </h2>
-
-                        <p className="mb-3 text-[24px] font-medium leading-[1.15] tracking-[-0.055em] text-[#F1E2FF]">
+                        <p className="footer-newsletter-title">
                             Fresh Thinking.
                             <br />
                             Practical Tech.
                         </p>
-
-                        <p className="mb-[18px] max-w-[29ch] text-[12px] leading-[1.65] tracking-[-0.015em] text-[#C7B5D7]">
+                        <p className="footer-newsletter-description">
                             Product insights, smarter systems, and AI that works for
                             business.
                         </p>
-
-                        <label
-                            htmlFor="footer-newsletter-email"
-                            className="mb-2 block text-[10px] leading-[1.5] text-[#C6AED8]"
-                        >
-                            Email address
-                        </label>
-
-                        <div className="flex items-center gap-[7px] rounded-[4px] border border-[#CBA9E3]/25 bg-[#160B28]/35 p-1 transition focus-within:border-[#C395ED] focus-within:shadow-[0_0_0_3px_rgba(184,138,219,0.15)]">
+                        <label htmlFor="footer-newsletter-email">Email address</label>
+                        <div className="footer-newsletter-field">
                             <input
                                 id="footer-newsletter-email"
                                 type="email"
@@ -182,21 +115,13 @@ const Footer = () => {
                                 placeholder="Your email address"
                                 aria-describedby="footer-newsletter-note"
                                 maxLength={254}
-                                className="h-[37px] min-w-0 flex-1 border-0 bg-transparent px-[7px] text-[11px] font-normal tracking-[-0.02em] text-[#F7EDFF] outline-none placeholder:text-[#B39AC8]"
                             />
-
                             <button
                                 type="button"
-                                disabled
                                 aria-label="Subscribe to the newsletter — coming soon"
-                                className="grid h-9 w-9 shrink-0 cursor-not-allowed place-items-center rounded-[4px] bg-[#C19BE9]/10 p-[9px] text-[#B89BCD]"
+                                disabled
                             >
-                                <svg
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    aria-hidden="true"
-                                    className="h-[18px] w-[18px]"
-                                >
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
                                     <path
                                         d="M5 12h14m-6-6 6 6-6 6"
                                         stroke="currentColor"
@@ -207,41 +132,26 @@ const Footer = () => {
                                 </svg>
                             </button>
                         </div>
-
-                        <p
-                            id="footer-newsletter-note"
-                            className="mt-[10px] text-[10px] leading-[1.5] text-[#B49AC8]"
-                        >
+                        <p id="footer-newsletter-note" className="footer-newsletter-note">
                             Newsletter signup coming soon.
                         </p>
                     </div>
                 </div>
 
-                {/* Bottom */}
-                <div className="flex flex-col gap-5 border-t border-[#D8B9F0]/15 bg-[#160C28]/15 px-6 py-[22px] sm:px-8 md:flex-row md:items-center md:justify-between lg:px-12">
-                    {/* Copyright */}
-                    <p className="m-0 text-[10px] leading-[1.8] text-[#BFA7D0]">
+                <div className="footer-bottom">
+                    <p>
                         © {currentYear} Bonotech Holdings Pte. Ltd.
-                        <span className="block">
-                            All rights reserved.
-                        </span>
+                        <span>All rights reserved.</span>
                     </p>
 
-                    {/* Back to top */}
                     <button
                         type="button"
+                        className="footer-top-link"
                         onClick={scrollToTop}
                         aria-label="Back to top"
-                        className="group flex w-fit items-center gap-2 py-2 text-[10px] tracking-[0.015em] text-[#CEB3E2] transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D9B4FC]"
                     >
                         <span>Back to Top</span>
-
-                        <svg
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            aria-hidden="true"
-                            className="h-[17px] w-[17px] transition-transform duration-300 group-hover:-translate-y-[3px]"
-                        >
+                        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
                             <path
                                 d="M12 19V5m-6 6 6-6 6 6"
                                 stroke="currentColor"
@@ -252,65 +162,44 @@ const Footer = () => {
                         </svg>
                     </button>
 
-                    {/* Socials */}
-                    <nav
-                        aria-label="Follow Bonotech"
-                        className="flex items-center gap-2"
-                    >
-                        {[
-                            {
-                                icon: twitterIcon,
-                                href: "https://x.com/bonotechpteltd",
-                                aria: "Bonotech on X",
-                            },
-                            {
-                                icon: instagramIcon,
-                                href: "https://www.instagram.com/bonotechpteltd",
-                                aria: "Bonotech on Instagram",
-                            },
-                            {
-                                icon: facebookIcon,
-                                href: "https://www.facebook.com/bonotechpteltd",
-                                aria: "Bonotech on Facebook",
-                            },
-                            {
-                                icon: linkedInIcon,
-                                href: "https://www.linkedin.com/company/bonotechpteltd",
-                                aria: "Bonotech on LinkedIn",
-                            },
-                        ].map((social) => {
-
-                            return (
-                                <a
-                                    key={social.aria}
-                                    href={social.href}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    aria-label={`${social.aria} (opens in a new tab)`}
-                                    className="group relative isolate grid h-[42px] w-[42px] place-items-center overflow-hidden rounded-full border border-[#DBC4F0]/25 text-[#E1C9F1] transition duration-300 hover:border-[#C797EF] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D9B4FC]"
-                                >
-                                    <span
-                                        className="absolute inset-0 -z-10 translate-y-[105%] rounded-full bg-[#642EAA] transition-transform duration-500 ease-out group-hover:translate-y-0"
-                                    />
-
-                                    <img
-                                        src={social.icon}
-                                        alt=""
-                                        aria-hidden="true"
-                                        className="h-[16px] w-[16px] object-contain"
-                                    />
-                                </a>
-                            );
-                        })}
+                    <nav className="footer-socials" aria-label="Follow Bonotech">
+                        <a
+                            href="https://x.com/bonotechpteltd"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="Bonotech on X (opens in a new tab)"
+                        >
+                            <span>X</span>
+                        </a>
+                        <a
+                            href="https://www.instagram.com/bonotechpteltd"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="Bonotech on Instagram (opens in a new tab)"
+                        >
+                            <span>IG</span>
+                        </a>
+                        <a
+                            href="https://www.facebook.com/bonotechpteltd"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="Bonotech on Facebook (opens in a new tab)"
+                        >
+                            <span>FB</span>
+                        </a>
+                        <a
+                            href="https://www.linkedin.com/company/bonotechpteltd"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="Bonotech on LinkedIn (opens in a new tab)"
+                        >
+                            <span>LI</span>
+                        </a>
                     </nav>
                 </div>
             </div>
 
-            {/* Bottom breathing space */}
-            <div
-                aria-hidden="true"
-                className="h-[54px] sm:h-[60px] lg:h-[76px]"
-            />
+            <div className="footer-video-space" aria-hidden="true" />
         </footer>
     );
 };

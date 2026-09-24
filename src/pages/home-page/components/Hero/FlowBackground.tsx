@@ -3,6 +3,14 @@ import { useEffect, useRef, type CSSProperties } from "react";
 type FlowBackgroundProps = {
     className?: string;
     style?: CSSProperties;
+    /** When true, freezes the shader clock (manual pause or reduced motion). */
+    paused?: boolean;
+    /** Cap for devicePixelRatio (template discovery uses 1; hero uses 1.5). */
+    maxPixelRatio?: number;
+    /** Vertical ring center in shader UV space (template default 0.43). */
+    ringCenterY?: number;
+    /** Shader time seed so sections can start mid-orbit like the template. */
+    initialElapsed?: number;
 };
 
 const vertexShaderSource = `
@@ -23,6 +31,7 @@ const fragmentShaderSource = `
   uniform vec2 uResolution;
   uniform vec2 uPointer;
   uniform float uTime;
+  uniform float uCenterY;
 
   float hash(vec2 point) {
     vec3 value = fract(vec3(point.xyx) * 0.1031);
@@ -45,9 +54,10 @@ const fragmentShaderSource = `
       smoothstep(0.6, 1.8, aspect)
     );
 
+    /* Ring vertical center — hero nudges down under the fixed navbar; discovery keeps template 0.43. */
     vec2 center = vec2(
       0.5 + 0.024 * sin(time * 0.43),
-      0.43 + 0.025 * sin(time * 0.57)
+      uCenterY + 0.025 * sin(time * 0.57)
     );
 
     vec2 point = (uv - center + uPointer * 0.007) * vec2(spread, 3.55);
@@ -179,9 +189,15 @@ function createProgram(gl: WebGLRenderingContext): WebGLProgram {
 export default function FlowBackground({
     className,
     style,
+    paused = false,
+    maxPixelRatio = 1.5,
+    ringCenterY = 0.48,
+    initialElapsed = 0,
 }: FlowBackgroundProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
+    const pausedRef = useRef(paused);
+    pausedRef.current = paused;
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -213,6 +229,7 @@ export default function FlowBackground({
         const resolutionUniform = gl.getUniformLocation(program, "uResolution");
         const pointerUniform = gl.getUniformLocation(program, "uPointer");
         const timeUniform = gl.getUniformLocation(program, "uTime");
+        const centerYUniform = gl.getUniformLocation(program, "uCenterY");
 
         const buffer = gl.createBuffer();
 
@@ -246,7 +263,7 @@ export default function FlowBackground({
 
         let width = 0;
         let height = 0;
-        let elapsed = 0;
+        let elapsed = initialElapsed;
         let lastTime = 0;
         let animationFrame = 0;
         let isVisible = true;
@@ -268,6 +285,7 @@ export default function FlowBackground({
             gl.uniform2f(resolutionUniform, width, height);
             gl.uniform2f(pointerUniform, pointerX, pointerY);
             gl.uniform1f(timeUniform, elapsed);
+            gl.uniform1f(centerYUniform, ringCenterY);
 
             gl.drawArrays(gl.TRIANGLES, 0, 6);
         };
@@ -277,7 +295,7 @@ export default function FlowBackground({
             width = bounds.width;
             height = bounds.height;
 
-            const pixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
+            const pixelRatio = Math.min(window.devicePixelRatio || 1, maxPixelRatio);
 
             canvas.width = Math.round(width * pixelRatio);
             canvas.height = Math.round(height * pixelRatio);
@@ -300,17 +318,25 @@ export default function FlowBackground({
             pointerX += (targetPointerX - pointerX) * 0.035;
             pointerY += (targetPointerY - pointerY) * 0.035;
 
-            if (!isPaused) {
+            if (!isPaused && !pausedRef.current) {
                 elapsed += delta;
             }
 
             render();
         };
 
-        const handlePointerMove = (event: PointerEvent) => {
-            const bounds = container.getBoundingClientRect();
+        const resizeObserver = new ResizeObserver(resize);
 
-            targetPointerX = (event.clientX / bounds.width - 0.5) * 2;
+        // Atmosphere parents often set pointer-events:none — listen on the section/hero instead.
+        const pointerRoot =
+            container.closest("section, .hero") ?? container.parentElement ?? container;
+
+        const handlePointerMove = (event: PointerEvent) => {
+            if (event.pointerType !== "mouse") return;
+
+            const bounds = pointerRoot.getBoundingClientRect();
+
+            targetPointerX = ((event.clientX - bounds.left) / bounds.width - 0.5) * 2;
             targetPointerY =
                 ((event.clientY - bounds.top) / bounds.height - 0.5) * 2;
         };
@@ -332,10 +358,8 @@ export default function FlowBackground({
             isVisible = entry.isIntersecting;
         });
 
-        const resizeObserver = new ResizeObserver(resize);
-
-        container.addEventListener("pointermove", handlePointerMove);
-        container.addEventListener("pointerleave", resetPointer);
+        pointerRoot.addEventListener("pointermove", handlePointerMove as EventListener);
+        pointerRoot.addEventListener("pointerleave", resetPointer);
 
         motionQuery.addEventListener("change", handleMotionChange);
         visibilityObserver.observe(container);
@@ -347,8 +371,8 @@ export default function FlowBackground({
         return () => {
             cancelAnimationFrame(animationFrame);
 
-            container.removeEventListener("pointermove", handlePointerMove);
-            container.removeEventListener("pointerleave", resetPointer);
+            pointerRoot.removeEventListener("pointermove", handlePointerMove as EventListener);
+            pointerRoot.removeEventListener("pointerleave", resetPointer);
 
             motionQuery.removeEventListener("change", handleMotionChange);
             visibilityObserver.disconnect();
@@ -357,18 +381,18 @@ export default function FlowBackground({
             gl.deleteBuffer(buffer);
             gl.deleteProgram(program);
         };
-    }, []);
+    }, [initialElapsed, maxPixelRatio, ringCenterY]);
 
     return (
         <div
             ref={containerRef}
-            className={className}
+            className={`${className ?? ""} ready`.trim()}
             aria-hidden="true"
             style={{
                 position: "absolute",
                 inset: 0,
                 overflow: "hidden",
-                background: "#160d29",
+                background: "transparent",
                 pointerEvents: "none",
                 ...style,
             }}

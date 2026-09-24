@@ -1,0 +1,422 @@
+.technology {
+    position: relative;
+    min-height: 100svh;
+    overflow: hidden;
+    padding: clamp(78px, 8vh, 110px) var(--edge) clamp(48px, 5vh, 75px);
+    background: linear-gradient(180deg, #0d0716, #10091b 28%, #12081e 100%);
+}
+
+.technology-heading {
+    position: relative;
+    z-index: 3;
+    max-width: 1200px;
+    margin: 0 auto 35px;
+    text-align: center;
+}
+
+.technology-eyebrow {
+    margin: 0 0 24px;
+    font-size: 13px;
+    line-height: 1.4;
+    letter-spacing: 0.13em;
+    color: #ae96c8;
+}
+
+.technology-heading h2 {
+    margin: 0;
+    font-size: clamp(36px, 4.05vw, 65px);
+    font-weight: 400;
+    line-height: 1.12;
+    letter-spacing: -0.055em;
+    color: #faf7ff;
+}
+
+.technology-heading h2 > span {
+    display: block;
+    color: #bda2e5;
+    font-weight: 700;
+}
+
+.technology-description {
+    max-width: 69ch;
+    margin: 25px auto 0;
+    font-size: clamp(1rem, 1.22vw, 1.125rem);
+    line-height: 1.6;
+    letter-spacing: -0.035em;
+    color: #afa6bd;
+}
+
+.tech-stage {
+    position: relative;
+    isolation: isolate;
+    width: 100%;
+    max-width: 1450px;
+    height: clamp(660px, 52vw, 790px);
+    margin: 0 auto;
+}
+
+.tech-nodes {
+    position: relative;
+    z-index: 3;
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 20px 26px;
+    width: 76%;
+    max-width: 790px;
+    padding: 18px 0 0;
+    margin: 0 auto;
+    list-style: none;
+}
+
+.tech-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.tech-node-disc {
+    display: grid;
+    place-items: center;
+    width: 62px;
+    height: 62px;
+    border: 1px solid #b694e51d;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 18%, #382548, #23172f 70%);
+    box-shadow: inset 0 1px 0 #e1c3ff0a;
+    transition:
+        background 0.35s,
+        border-color 0.35s,
+        box-shadow 0.35s,
+        translate 0.35s;
+}
+
+.tech-node-disc img {
+    width: 35px;
+    height: 35px;
+    object-fit: contain;
+}
+
+.tech-php img,
+.tech-golang img {
+    width: 42px;
+}
+
+.tech-ios .tech-node-disc img,
+.tech-wordpress .tech-node-disc img {
+    filter: brightness(0) invert(0.87);
+}
+
+.tech-node-name {
+    padding: 2px 4px;
+    color: #b3a3c3;
+    font-size: 11px;
+    line-height: 1.25;
+    letter-spacing: -0.025em;
+    text-align: center;
+    white-space: nowrap;
+    background: #10091be6;
+    border-radius: 3px;
+    transition: color 0.35s;
+}
+
+.tech-connections,
+.tech-orbits {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+}
+
+.tech-connections {
+    z-index: 1;
+}
+
+.tech-wire {
+    fill: none;
+    stroke: #9c62d83b;
+    stroke-width: 1;
+    transition:
+        stroke 0.35s,
+        stroke-width 0.35s;
+}
+
+.tech-signal {
+    fill: none;
+    stroke: url(#technology-connection-light);
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-dasharray: 14 106;
+    stroke-dashoffset: 120;
+    opacity: 0;
+    animation: tech-connection-flow 6.5s linear infinite;
+    animation-delay: var(--wire-delay, 0s);
+}
+
+.tech-wire.is-active {
+    stroke: #ba83fa99;
+    stroke-width: 1.5;
+}
+
+.tech-signal.is-active {
+    stroke-width: 2.6;
+    filter: drop-shadow(0 0 4px #bf8eff);
+}
+
+.tech-orbits {
+    z-index: 2;
+}
+
+.tech-orbit-tracks {
+    fill: none;
+    stroke: url(#technology-orbit-ink);
+    stroke-width: 1.1;
+}
+
+.tech-orbit-logos {
+    opacity: 0.29;
+    filter: brightness(0) saturate(100%) invert(64%) sepia(23%) saturate(987%)
+        hue-rotate(221deg) brightness(98%);
+}
+
+.tech-ground-glow {
+    position: absolute;
+    z-index: 0;
+    left: 15%;
+    right: 15%;
+    top: 47%;
+    height: 52%;
+    pointer-events: none;
+    background: radial-gradient(
+        ellipse at center,
+        #642cb647 0,
+        #4b18852b 32%,
+        transparent 68%
+    );
+    animation: tech-core-glow 7s ease-in-out infinite;
+}
+
+.tech-core {
+    position: absolute;
+    z-index: 4;
+    left: 50%;
+    top: 69.5%;
+    transform: translate(-50%, -50%);
+    width: clamp(160px, 15vw, 205px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 11px;
+    border: 1px solid #bb85ff35;
+    background: radial-gradient(
+        circle at 38% 28%,
+        #7040ae 0,
+        #42217b 44%,
+        #32145c 74%,
+        #1f103b 100%
+    );
+    box-shadow:
+        inset 0 1px 2px #d6b3ff20,
+        inset 0 -10px 32px #2007377d,
+        0 0 75px #8237d252,
+        0 28px 80px #58238d38;
+}
+
+.tech-core::before {
+    content: "";
+    position: absolute;
+    inset: -22%;
+    z-index: -1;
+    border-radius: 50%;
+    background: radial-gradient(circle, #ae62ff24, transparent 66%);
+    animation: tech-core-glow 7s ease-in-out infinite;
+}
+
+.tech-core img {
+    display: block;
+    width: 48%;
+    height: auto;
+    max-height: 42%;
+    object-fit: contain;
+    filter: drop-shadow(0 0 10px #e7c6ff69) brightness(1.35);
+}
+
+.tech-core > span {
+    font-size: 10px;
+    letter-spacing: 0.19em;
+    line-height: 1;
+    color: #e0ccf5;
+}
+
+.tech-stage:not(.is-visible) .tech-signal,
+.tech-stage:not(.is-visible) .tech-ground-glow,
+.tech-stage:not(.is-visible) .tech-core::before {
+    animation-play-state: paused;
+}
+
+@keyframes tech-connection-flow {
+    0% {
+        stroke-dashoffset: 120;
+        opacity: 0;
+    }
+
+    15% {
+        opacity: 0.8;
+    }
+
+    80% {
+        opacity: 0.85;
+    }
+
+    100% {
+        stroke-dashoffset: 0;
+        opacity: 0;
+    }
+}
+
+@keyframes tech-core-glow {
+    0%,
+    100% {
+        opacity: 0.65;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .tech-node:hover .tech-node-disc {
+        translate: 0 -3px;
+        border-color: #ad7be181;
+        background: #30203f;
+        box-shadow: 0 0 24px #9955d926;
+    }
+
+    .tech-node:hover .tech-node-name {
+        color: #f2e3ff;
+    }
+}
+
+@media (max-width: 1100px) {
+    .tech-nodes {
+        width: 90%;
+        gap: 18px 12px;
+    }
+
+    .tech-node-disc {
+        width: 56px;
+        height: 56px;
+    }
+
+    .tech-node-disc img {
+        width: 32px;
+        height: 32px;
+    }
+
+    .tech-php img,
+    .tech-golang img {
+        width: 38px;
+    }
+}
+
+@media (max-width: 760px) {
+    .technology {
+        padding: 74px 22px 38px;
+    }
+
+    .technology-heading {
+        margin-bottom: 30px;
+    }
+
+    .technology-eyebrow {
+        margin-bottom: 22px;
+    }
+
+    .technology-heading h2 {
+        font-size: clamp(36px, 6vw, 45px);
+    }
+
+    .technology-description {
+        font-size: 16px;
+    }
+
+    .technology-description br {
+        display: none;
+    }
+
+    .tech-stage {
+        height: 590px;
+    }
+
+    .tech-nodes {
+        width: 100%;
+        max-width: 480px;
+        gap: 18px 4px;
+        padding-top: 10px;
+    }
+
+    .tech-node {
+        gap: 6px;
+    }
+
+    .tech-node-disc {
+        width: clamp(34px, 8vw, 50px);
+        height: clamp(34px, 8vw, 50px);
+    }
+
+    .tech-node-disc img {
+        width: 59%;
+        height: 59%;
+    }
+
+    .tech-php img,
+    .tech-golang img {
+        width: 72%;
+    }
+
+    .tech-node-name {
+        font-size: clamp(8px, 1.95vw, 10px);
+        padding: 2px 0;
+        letter-spacing: -0.04em;
+    }
+
+    .tech-core {
+        width: 142px;
+        top: 70%;
+    }
+
+    .tech-core > span {
+        font-size: 8px;
+    }
+
+    .tech-orbit-symbol image {
+        width: 14px;
+        height: 14px;
+        x: -7px;
+        y: -7px;
+    }
+
+    .tech-ground-glow {
+        left: -15%;
+        right: -15%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .tech-signal {
+        animation: none;
+        opacity: 0;
+    }
+
+    .tech-ground-glow,
+    .tech-core::before {
+        animation: none;
+    }
+}
