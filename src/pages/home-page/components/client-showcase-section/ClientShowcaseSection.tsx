@@ -293,39 +293,36 @@ const ClientShowcaseSection = () => {
 
         const handleVisibilityChange = () => {
             lastRef.current = performance.now();
+            syncTick();
         };
 
         let intersectionObserver: IntersectionObserver | null = null;
-
-        if ("IntersectionObserver" in window) {
-            intersectionObserver = new IntersectionObserver(
-                ([entry]) => {
-                    visibleRef.current = entry.isIntersecting;
-                    lastRef.current = performance.now();
-                },
-                {
-                    threshold: 0.01,
-                },
-            );
-
-            intersectionObserver.observe(section);
-        } else {
-            visibleRef.current = true;
-        }
 
         const resizeObserver = new ResizeObserver(size);
 
         resizeObserver.observe(orbit);
 
+        const syncTick = () => {
+            cancelAnimationFrame(frameRef.current);
+            frameRef.current = 0;
+            lastRef.current = performance.now();
+            if (!document.hidden && visibleRef.current) {
+                frameRef.current = requestAnimationFrame(tick);
+            }
+        };
+
         const tick = (now: number) => {
+            frameRef.current = 0;
+
+            if (document.hidden || !visibleRef.current) {
+                lastRef.current = now;
+                return;
+            }
+
             frameRef.current = requestAnimationFrame(tick);
 
             const previous = lastRef.current;
             lastRef.current = now;
-
-            if (document.hidden || !visibleRef.current) {
-                return;
-            }
 
             const dt = previous
                 ? Math.min((now - previous) / 1000, MAX_FRAME_DELTA_SECONDS)
@@ -367,6 +364,24 @@ const ClientShowcaseSection = () => {
             }
         };
 
+        if ("IntersectionObserver" in window) {
+            intersectionObserver = new IntersectionObserver(
+                ([entry]) => {
+                    visibleRef.current = entry.isIntersecting;
+                    lastRef.current = performance.now();
+                    syncTick();
+                },
+                {
+                    threshold: 0.01,
+                    rootMargin: "10% 0px",
+                },
+            );
+
+            intersectionObserver.observe(section);
+        } else {
+            visibleRef.current = true;
+        }
+
         const previousButton = section.querySelector(
             "#client-previous",
         ) as HTMLButtonElement | null;
@@ -395,8 +410,7 @@ const ClientShowcaseSection = () => {
 
         size();
         syncPause();
-
-        frameRef.current = requestAnimationFrame(tick);
+        syncTick();
 
         return () => {
             section.classList.remove("is-enhanced");

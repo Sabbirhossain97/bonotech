@@ -257,34 +257,19 @@
 
 html {
     scroll-behavior: smooth;
-    scroll-snap-type: y proximity;
-    /* Clear fixed navbar when sections snap / hash-scroll into view */
+    /* Clear fixed navbar on hash / programmatic section scroll */
     --navbar-scroll-offset: 96px;
     scroll-padding-top: var(--navbar-scroll-offset);
 }
 
-main > section {
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
-    /* Offset via html scroll-padding-top only — also setting scroll-margin
-       here doubles the gap (~192px) and leaves the previous section on screen. */
-}
-
-html.section-scroll-enhanced {
-    scroll-snap-type: none;
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
 }
 
 html.is-section-scrolling {
     scroll-behavior: auto !important;
-    scroll-snap-type: none !important;
-}
-
-/* Touch: keep gentle proximity snap, never mandatory — tall sections
-   (e.g. service scopes) can't be read when mandatory locks the viewport. */
-@media (pointer: coarse) {
-    main > section {
-        scroll-snap-stop: normal;
-    }
 }
 
 body {

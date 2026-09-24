@@ -9,7 +9,6 @@
   overflow:hidden;
   padding:clamp(72px,9vh,110px) 0 clamp(56px,7vh,85px);
   background:linear-gradient(180deg,#1c102e 0,#10091a 120px,#08060c 245px,#08060c 100%);
-  scroll-snap-align:center;
 }
 .clients-heading{position:relative;z-index:2;padding:0 var(--edge);text-align:center;max-width: 980px}
 .clients-eyebrow{margin:0 0 24px;font-size:13px;font-weight:400;line-height:1.4;letter-spacing:.13em;color:#ae96c8}
@@ -57,7 +56,7 @@ a.client-face:focus-visible{outline:2px solid #e0caff;outline-offset:4px}
 .client-motion[aria-pressed=true] .client-play-icon{display:block}
 .client-announcement{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
 @media (max-width: 760px){
-  .clients{padding-top:64px;padding-bottom:48px;min-height:auto;scroll-snap-align:center;gap:0}
+  .clients{padding-top:64px;padding-bottom:48px;min-height:auto;gap:0}
   .clients-eyebrow{font-size:12px;margin-bottom:16px;letter-spacing:.10em}
   .clients-heading h2{font-size:clamp(32px,6vw,42px)}
   .clients-description{font-size:15px;max-width: 37ch;margin-top:16px}

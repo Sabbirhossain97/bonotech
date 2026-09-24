@@ -1,14 +1,58 @@
+import { useState } from "react";
+import type { FormEventHandler } from "react";
 import bonotechLogo from "@/assets/bonotech-logo-mono2.png";
+import {
+    EmailSendError,
+    subscribeNewsletter,
+} from "@/lib/services/email";
 import "./footer.css";
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const Footer = () => {
     const currentYear = new Date().getFullYear();
+    const [email, setEmail] = useState("");
+    const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">(
+        "idle",
+    );
+    const [message, setMessage] = useState("");
+
+    const isEmailValid = EMAIL_RE.test(email.trim());
+    const canSubmit = isEmailValid && status !== "submitting";
 
     const scrollToTop = () => {
         window.scrollTo({
             top: 0,
             behavior: "smooth",
         });
+    };
+
+    const handleNewsletterSubmit: FormEventHandler<HTMLFormElement> = async (
+        event,
+    ) => {
+        event.preventDefault();
+        if (!canSubmit) return;
+
+        setStatus("submitting");
+        setMessage("");
+
+        try {
+            const result = await subscribeNewsletter(email);
+            setStatus("success");
+            setMessage(
+                result.alreadySubscribed
+                    ? "You're already on the list — thanks for staying with us."
+                    : "You're in. We'll share fresh thinking and practical tech.",
+            );
+            setEmail("");
+        } catch (error) {
+            setStatus("error");
+            setMessage(
+                error instanceof EmailSendError
+                    ? error.message
+                    : "Could not subscribe right now. Please try again.",
+            );
+        }
     };
 
     return (
@@ -105,36 +149,70 @@ const Footer = () => {
                             Product insights, smarter systems, and AI that works for
                             business.
                         </p>
-                        <label htmlFor="footer-newsletter-email">Email address</label>
-                        <div className="footer-newsletter-field">
-                            <input
-                                id="footer-newsletter-email"
-                                type="email"
-                                name="newsletterEmail"
-                                autoComplete="email"
-                                placeholder="Your email address"
-                                aria-describedby="footer-newsletter-note"
-                                maxLength={254}
-                            />
-                            <button
-                                type="button"
-                                aria-label="Subscribe to the newsletter — coming soon"
-                                disabled
+                        <form
+                            className="footer-newsletter-form"
+                            onSubmit={handleNewsletterSubmit}
+                            noValidate
+                        >
+                            <label htmlFor="footer-newsletter-email">
+                                Email address
+                            </label>
+                            <div className="footer-newsletter-field">
+                                <input
+                                    id="footer-newsletter-email"
+                                    type="email"
+                                    name="newsletterEmail"
+                                    autoComplete="email"
+                                    placeholder="Your email address"
+                                    aria-describedby="footer-newsletter-note"
+                                    aria-invalid={status === "error"}
+                                    maxLength={254}
+                                    value={email}
+                                    onChange={(event) => {
+                                        setEmail(event.target.value);
+                                        if (status !== "idle") {
+                                            setStatus("idle");
+                                            setMessage("");
+                                        }
+                                    }}
+                                    disabled={status === "submitting"}
+                                    required
+                                />
+                                <button
+                                    type="submit"
+                                    aria-label="Subscribe to the newsletter"
+                                    disabled={!canSubmit}
+                                >
+                                    <svg
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        aria-hidden="true"
+                                    >
+                                        <path
+                                            d="M5 12h14m-6-6 6 6-6 6"
+                                            stroke="currentColor"
+                                            strokeWidth="1.5"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        />
+                                    </svg>
+                                </button>
+                            </div>
+                            <p
+                                id="footer-newsletter-note"
+                                className={`footer-newsletter-note${
+                                    status === "success"
+                                        ? " is-success"
+                                        : status === "error"
+                                          ? " is-error"
+                                          : ""
+                                }`}
+                                aria-live="polite"
                             >
-                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                                    <path
-                                        d="M5 12h14m-6-6 6 6-6 6"
-                                        stroke="currentColor"
-                                        strokeWidth="1.5"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                    />
-                                </svg>
-                            </button>
-                        </div>
-                        <p id="footer-newsletter-note" className="footer-newsletter-note">
-                            Newsletter signup coming soon.
-                        </p>
+                                {message ||
+                                    "No spam — just useful updates when we have them."}
+                            </p>
+                        </form>
                     </div>
                 </div>
 

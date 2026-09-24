@@ -190,7 +190,7 @@ export default function FlowBackground({
     className,
     style,
     paused = false,
-    maxPixelRatio = 1.5,
+    maxPixelRatio = 1.25,
     ringCenterY = 0.48,
     initialElapsed = 0,
 }: FlowBackgroundProps) {
@@ -295,7 +295,11 @@ export default function FlowBackground({
             width = bounds.width;
             height = bounds.height;
 
-            const pixelRatio = Math.min(window.devicePixelRatio || 1, maxPixelRatio);
+            const isCoarse = window.matchMedia("(pointer: coarse)").matches;
+            const pixelRatio = Math.min(
+                window.devicePixelRatio || 1,
+                isCoarse ? Math.min(maxPixelRatio, 1) : maxPixelRatio,
+            );
 
             canvas.width = Math.round(width * pixelRatio);
             canvas.height = Math.round(height * pixelRatio);
@@ -304,7 +308,7 @@ export default function FlowBackground({
         };
 
         const animate = (currentTime: number) => {
-            animationFrame = requestAnimationFrame(animate);
+            animationFrame = 0;
 
             if (!lastTime) {
                 lastTime = currentTime;
@@ -313,7 +317,10 @@ export default function FlowBackground({
             const delta = Math.min((currentTime - lastTime) / 1000, 0.06);
             lastTime = currentTime;
 
-            if (!isVisible || document.hidden) return;
+            if (!isVisible || document.hidden) {
+                lastTime = 0;
+                return;
+            }
 
             pointerX += (targetPointerX - pointerX) * 0.035;
             pointerY += (targetPointerY - pointerY) * 0.035;
@@ -323,6 +330,16 @@ export default function FlowBackground({
             }
 
             render();
+            animationFrame = requestAnimationFrame(animate);
+        };
+
+        const syncAnimation = () => {
+            cancelAnimationFrame(animationFrame);
+            animationFrame = 0;
+            lastTime = 0;
+            if (isVisible && !document.hidden) {
+                animationFrame = requestAnimationFrame(animate);
+            }
         };
 
         const resizeObserver = new ResizeObserver(resize);
@@ -354,19 +371,28 @@ export default function FlowBackground({
             isPaused = event.matches;
         };
 
-        const visibilityObserver = new IntersectionObserver(([entry]) => {
-            isVisible = entry.isIntersecting;
-        });
+        const visibilityObserver = new IntersectionObserver(
+            ([entry]) => {
+                isVisible = entry.isIntersecting;
+                syncAnimation();
+            },
+            { rootMargin: "12% 0px", threshold: 0.01 },
+        );
+
+        const handleDocumentVisibility = () => {
+            syncAnimation();
+        };
 
         pointerRoot.addEventListener("pointermove", handlePointerMove as EventListener);
         pointerRoot.addEventListener("pointerleave", resetPointer);
 
         motionQuery.addEventListener("change", handleMotionChange);
+        document.addEventListener("visibilitychange", handleDocumentVisibility);
         visibilityObserver.observe(container);
         resizeObserver.observe(container);
 
         resize();
-        animationFrame = requestAnimationFrame(animate);
+        syncAnimation();
 
         return () => {
             cancelAnimationFrame(animationFrame);
@@ -375,6 +401,7 @@ export default function FlowBackground({
             pointerRoot.removeEventListener("pointerleave", resetPointer);
 
             motionQuery.removeEventListener("change", handleMotionChange);
+            document.removeEventListener("visibilitychange", handleDocumentVisibility);
             visibilityObserver.disconnect();
             resizeObserver.disconnect();
 

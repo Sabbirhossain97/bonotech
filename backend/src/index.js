@@ -2,8 +2,15 @@ import "dotenv/config";
 import cors from "cors";
 import express from "express";
 import rateLimit from "express-rate-limit";
+import fs from "fs/promises";
 import helmet from "helmet";
 import nodemailer from "nodemailer";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const DATA_DIR = path.resolve(__dirname, "../data");
+const NEWSLETTER_FILE = path.join(DATA_DIR, "newsletter-subscribers.json");
 
 const PORT = Number(process.env.PORT || 8792);
 const HOST = process.env.HOST || "127.0.0.1";
@@ -85,6 +92,57 @@ function getMail() {
 
 const fromName = process.env.MAIL_FROM_NAME?.trim() || "Bonotech Website";
 
+/** Serialize newsletter writes so concurrent posts don't clobber the JSON file. */
+let newsletterWriteQueue = Promise.resolve();
+
+async function appendNewsletterSubscriber(email) {
+  const run = async () => {
+    await fs.mkdir(DATA_DIR, { recursive: true });
+
+    let subscribers = [];
+    try {
+      const raw = await fs.readFile(NEWSLETTER_FILE, "utf8");
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) {
+        subscribers = parsed;
+      }
+    } catch (error) {
+      if (error?.code !== "ENOENT") {
+        throw error;
+      }
+    }
+
+    const normalized = email.toLowerCase();
+    if (
+      subscribers.some(
+        (entry) => String(entry?.email ?? "").toLowerCase() === normalized,
+      )
+    ) {
+      return { alreadySubscribed: true };
+    }
+
+    subscribers.push({
+      email: normalized,
+      subscribedAt: new Date().toISOString(),
+    });
+
+    await fs.writeFile(
+      NEWSLETTER_FILE,
+      `${JSON.stringify(subscribers, null, 2)}\n`,
+      "utf8",
+    );
+
+    return { alreadySubscribed: false };
+  };
+
+  const next = newsletterWriteQueue.then(run, run);
+  newsletterWriteQueue = next.then(
+    () => undefined,
+    () => undefined,
+  );
+  return next;
+}
+
 const app = express();
 
 app.set("trust proxy", 1);
@@ -122,6 +180,38 @@ const sendLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   message: { message: "Failed", error: "Too many requests. Try again later." },
+});
+
+const newsletterLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { message: "Failed", error: "Too many requests. Try again later." },
+});
+
+app.post("/newsletter", newsletterLimiter, async (req, res) => {
+  try {
+    const email = String(req.body?.email ?? "").trim().toLowerCase();
+
+    if (!email || !EMAIL_RE.test(email) || email.length > 254) {
+      res.status(400).json({
+        message: "Failed",
+        error: "Please enter a valid email address.",
+      });
+      return;
+    }
+
+    const result = await appendNewsletterSubscriber(email);
+
+    res.json({
+      message: "Success",
+      alreadySubscribed: result.alreadySubscribed,
+    });
+  } catch (error) {
+    console.error("[bonotech-mail-api] newsletter save failed:", error);
+    res.status(500).json({ message: "Failed" });
+  }
 });
 
 app.post("/send-email", sendLimiter, async (req, res) => {

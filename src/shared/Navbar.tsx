@@ -58,15 +58,16 @@ export function Navbar({ links = DEFAULT_LINKS }: NavbarProps) {
         link.download ? link.href : navHref(link.href)
 
     useEffect(() => {
+        let ticking = false
         const handleScroll = () => {
-            if (window.scrollY > 20) {
-                setIsScrolled(true)
-            } else {
-                setIsScrolled(false)
-            }
+            if (ticking) return
+            ticking = true
+            requestAnimationFrame(() => {
+                setIsScrolled(window.scrollY > 20)
+                ticking = false
+            })
         }
-        window.addEventListener('scroll', handleScroll)
-        // Check initial scroll position
+        window.addEventListener('scroll', handleScroll, { passive: true })
         handleScroll()
         return () => window.removeEventListener('scroll', handleScroll)
     }, [])
@@ -89,9 +90,9 @@ export function Navbar({ links = DEFAULT_LINKS }: NavbarProps) {
                     "fixed top-0 left-0 right-0 z-[60] w-full transition-all duration-300 ease-in-out border-b",
                     isHome
                         ? isScrolled
-                            ? "border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.3)] bg-[#020914]/80 backdrop-blur-md max-lg:bg-[rgba(2,9,20,0.45)] max-lg:backdrop-blur-xl max-lg:backdrop-saturate-150"
+                            ? "border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.3)] bg-[#020914]/75 backdrop-blur-sm max-lg:bg-[rgba(2,9,20,0.72)] max-lg:backdrop-blur-[6px] max-lg:shadow-none"
                             : "bg-transparent border-transparent"
-                        : "border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.3)] bg-[#020914]/80 backdrop-blur-md max-lg:bg-[rgba(2,9,20,0.45)] max-lg:backdrop-blur-xl max-lg:backdrop-saturate-150"
+                        : "border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.3)] bg-[#020914]/75 backdrop-blur-sm max-lg:bg-[rgba(2,9,20,0.72)] max-lg:backdrop-blur-[6px] max-lg:shadow-none"
                 )}
                 aria-label="Main navigation"
             >

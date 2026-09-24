@@ -317,3 +317,70 @@ export async function sendDiscoveryCallEmail(
     senderEmail,
   });
 }
+
+export interface NewsletterSubscribeResult {
+  alreadySubscribed: boolean;
+}
+
+/**
+ * Saves a newsletter email on the Bonotech API (JSON file on the server).
+ */
+export async function subscribeNewsletter(
+  email: string,
+): Promise<NewsletterSubscribeResult> {
+  const cleaned = email.trim().toLowerCase();
+
+  if (!cleaned) {
+    throw new EmailSendError("Please enter your email address.");
+  }
+
+  if (!EMAIL_RE.test(cleaned) || cleaned.length > 254) {
+    throw new EmailSendError("Please enter a valid email address.");
+  }
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 30_000);
+
+  try {
+    const res = await fetch(`${EMAIL_API_BASE}/newsletter`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: cleaned }),
+      signal: controller.signal,
+    });
+
+    let payload: {
+      message?: string;
+      error?: string;
+      alreadySubscribed?: boolean;
+    } = {};
+
+    try {
+      payload = (await res.json()) as typeof payload;
+    } catch {
+      // ignore JSON parse errors; fall through to status handling
+    }
+
+    if (!res.ok || payload.message === "Failed") {
+      throw new EmailSendError(
+        payload.error?.trim() ||
+          "Could not subscribe right now. Please try again.",
+      );
+    }
+
+    return { alreadySubscribed: Boolean(payload.alreadySubscribed) };
+  } catch (err) {
+    if (err instanceof EmailSendError) throw err;
+
+    if (err instanceof DOMException && err.name === "AbortError") {
+      throw new EmailSendError("Request timed out. Please try again.");
+    }
+
+    throw new EmailSendError(
+      "Unable to reach the server. Please check your connection and try again.",
+      err,
+    );
+  } finally {
+    clearTimeout(timeout);
+  }
+}

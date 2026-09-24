@@ -555,8 +555,6 @@
     .testimonials {
         padding: 48px 22px;
         gap: 30px;
-        /* Taller than the viewport — don't snap-lock above the carousel controls */
-        scroll-snap-align: none;
         min-height: auto;
     }
 

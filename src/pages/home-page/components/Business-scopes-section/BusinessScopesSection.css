@@ -393,8 +393,6 @@
 @media (max-width: 760px) {
     .ways-in {
         padding: 74px 22px 80px;
-        /* Taller than the viewport — don't snap-lock mid-content */
-        scroll-snap-align: none;
     }
 
     .ways-heading {

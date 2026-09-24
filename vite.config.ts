@@ -21,8 +21,12 @@ export default defineConfig({
   server: {
     host: 'localhost',
     proxy: {
-      // Local discovery/contact submits → Bonotech mail API (or remote when unset).
+      // Local discovery/contact/newsletter → Bonotech mail API (or remote when unset).
       '/send-email': {
+        target: process.env.VITE_EMAIL_PROXY_TARGET || 'http://127.0.0.1:8792',
+        changeOrigin: true,
+      },
+      '/newsletter': {
         target: process.env.VITE_EMAIL_PROXY_TARGET || 'http://127.0.0.1:8792',
         changeOrigin: true,
       },

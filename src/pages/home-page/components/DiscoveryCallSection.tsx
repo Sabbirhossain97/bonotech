@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { FormEventHandler } from "react";
 import {
     EmailSendError,
@@ -64,6 +64,29 @@ const fromLocalDateValue = (value: string) => {
     return new Date(year, month - 1, day);
 };
 
+/** Current calendar date + minutes-from-midnight in a given IANA timezone. */
+const getNowInTimeZone = (timeZone: string) => {
+    const parts = new Intl.DateTimeFormat("en-US", {
+        timeZone,
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        hourCycle: "h23",
+    }).formatToParts(new Date());
+
+    const read = (type: Intl.DateTimeFormatPartTypes) =>
+        parts.find((part) => part.type === type)?.value ?? "0";
+
+    const dateValue = `${read("year")}-${read("month")}-${read("day")}`;
+    const minutes = Number(read("hour")) * 60 + Number(read("minute"));
+
+    return { dateValue, minutes };
+};
+
+const isDateBefore = (value: string, other: string) => value < other;
+
 const addDays = (date: Date, amount: number) => {
     const next = new Date(date);
     next.setDate(next.getDate() + amount);
@@ -97,12 +120,6 @@ const formatTime = (minutes: number, format: ClockFormat) => {
 };
 
 const DiscoveryCallSection = () => {
-    const today = useMemo(() => {
-        const value = new Date();
-        value.setHours(0, 0, 0, 0);
-        return value;
-    }, []);
-
     const browserTimeZone = useMemo(
         () => Intl.DateTimeFormat().resolvedOptions().timeZone || "Asia/Dhaka",
         [],
@@ -126,10 +143,17 @@ const DiscoveryCallSection = () => {
 
     const [calendarView, setCalendarView] = useState<CalendarView>("week");
     const [clockFormat, setClockFormat] = useState<ClockFormat>("12");
-    const [anchorDate, setAnchorDate] = useState(today);
-    const [selectedDate, setSelectedDate] = useState(toLocalDateValue(today));
-    const [selectedTime, setSelectedTime] = useState<number | null>(null);
     const [timeZone, setTimeZone] = useState(browserTimeZone);
+    const nowInZone = getNowInTimeZone(timeZone);
+    const todayValue = nowInZone.dateValue;
+    const todayDate = useMemo(
+        () => fromLocalDateValue(todayValue),
+        [todayValue],
+    );
+
+    const [anchorDate, setAnchorDate] = useState(todayDate);
+    const [selectedDate, setSelectedDate] = useState(todayValue);
+    const [selectedTime, setSelectedTime] = useState<number | null>(null);
     const [showReview, setShowReview] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
     const [submitState, setSubmitState] = useState<SubmitState>("idle");
@@ -140,6 +164,55 @@ const DiscoveryCallSection = () => {
         time: string;
         timeZone: string;
     } | null>(null);
+
+    const isSlotAvailable = (dateValue: string, slotMinutes: number) => {
+        if (isDateBefore(dateValue, todayValue)) return false;
+        if (dateValue > todayValue) return true;
+        return slotMinutes > nowInZone.minutes;
+    };
+
+    const availableSlots = useMemo(
+        () =>
+            selectedDate
+                ? TIME_SLOT_MINUTES.filter((slot) =>
+                      isSlotAvailable(selectedDate, slot),
+                  )
+                : [],
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- recompute from live clock + selection
+        [selectedDate, todayValue, nowInZone.minutes],
+    );
+
+    const canGoPrevious = useMemo(() => {
+        if (calendarView === "week") {
+            const previousWeekEnd = addDays(startOfWeek(anchorDate), -1);
+            return toLocalDateValue(previousWeekEnd) >= todayValue;
+        }
+
+        const previousMonth = addMonths(anchorDate, -1);
+        const lastDay = new Date(
+            previousMonth.getFullYear(),
+            previousMonth.getMonth() + 1,
+            0,
+        );
+        return toLocalDateValue(lastDay) >= todayValue;
+    }, [anchorDate, calendarView, todayValue]);
+
+    useEffect(() => {
+        if (selectedDate && isDateBefore(selectedDate, todayValue)) {
+            setSelectedDate(todayValue);
+            setSelectedTime(null);
+            return;
+        }
+
+        if (
+            selectedTime !== null &&
+            selectedDate &&
+            !isSlotAvailable(selectedDate, selectedTime)
+        ) {
+            setSelectedTime(null);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selectedDate, selectedTime, todayValue, nowInZone.minutes, timeZone]);
 
     const calendarCells = useMemo<CalendarCell[]>(() => {
         if (calendarView === "week") {
@@ -198,7 +271,8 @@ const DiscoveryCallSection = () => {
             form.companySize &&
             form.focus &&
             selectedDate &&
-            selectedTime !== null,
+            selectedTime !== null &&
+            isSlotAvailable(selectedDate, selectedTime),
     );
 
     const updateField = (field: keyof FormValues, value: string) => {
@@ -209,6 +283,8 @@ const DiscoveryCallSection = () => {
     };
 
     const selectDate = (value: string) => {
+        if (isDateBefore(value, todayValue)) return;
+
         const next = fromLocalDateValue(value);
         setSelectedDate(value);
         setSelectedTime(null);
@@ -224,12 +300,13 @@ const DiscoveryCallSection = () => {
     };
 
     const goToToday = () => {
-        setAnchorDate(today);
-        setSelectedDate(toLocalDateValue(today));
+        setAnchorDate(todayDate);
+        setSelectedDate(todayValue);
         setSelectedTime(null);
     };
 
     const goPrevious = () => {
+        if (!canGoPrevious) return;
         setAnchorDate((current) =>
             calendarView === "week" ? addDays(current, -7) : addMonths(current, -1),
         );
@@ -263,9 +340,9 @@ const DiscoveryCallSection = () => {
             focus: "",
             brief: "",
         });
-        setSelectedDate(toLocalDateValue(today));
+        setSelectedDate(todayValue);
         setSelectedTime(null);
-        setAnchorDate(today);
+        setAnchorDate(todayDate);
         setTimeZone(browserTimeZone);
         setSubmitState("idle");
         setSubmitMessage("");
@@ -547,6 +624,7 @@ const DiscoveryCallSection = () => {
                                         type="button"
                                         className="discovery-nav"
                                         onClick={goPrevious}
+                                        disabled={!canGoPrevious}
                                         aria-label={`Previous ${calendarView}`}
                                     >
                                         <svg viewBox="0 0 24 24" fill="none">
@@ -599,7 +677,8 @@ const DiscoveryCallSection = () => {
                             >
                                 {calendarCells.map((day) => {
                                     const selected = selectedDate === day.value;
-                                    const isToday = day.value === toLocalDateValue(today);
+                                    const isToday = day.value === todayValue;
+                                    const isPast = isDateBefore(day.value, todayValue);
 
                                     return (
                                         <button
@@ -607,6 +686,7 @@ const DiscoveryCallSection = () => {
                                             type="button"
                                             className="discovery-date"
                                             onClick={() => selectDate(day.value)}
+                                            disabled={isPast}
                                             aria-pressed={selected}
                                             aria-current={isToday ? "date" : undefined}
                                             style={
@@ -680,19 +760,37 @@ const DiscoveryCallSection = () => {
                                 aria-labelledby="discovery-slot-range"
                             >
                                 <div className="discovery-slot-buttons discovery-slot-buttons--stack">
-                                    {TIME_SLOT_MINUTES.map((slot) => (
-                                        <button
-                                            key={slot}
-                                            type="button"
-                                            className="discovery-slot"
-                                            onClick={() => setSelectedTime(slot)}
-                                            aria-pressed={selectedTime === slot}
-                                        >
-                                            <span>{formatTime(slot, clockFormat)}</span>
-                                            <span>30 min</span>
-                                        </button>
-                                    ))}
+                                    {TIME_SLOT_MINUTES.map((slot) => {
+                                        const available = isSlotAvailable(
+                                            selectedDate,
+                                            slot,
+                                        );
+
+                                        return (
+                                            <button
+                                                key={slot}
+                                                type="button"
+                                                className="discovery-slot"
+                                                onClick={() => setSelectedTime(slot)}
+                                                disabled={!available}
+                                                aria-pressed={selectedTime === slot}
+                                            >
+                                                <span>
+                                                    {formatTime(slot, clockFormat)}
+                                                </span>
+                                                <span>
+                                                    {available ? "30 min" : "Unavailable"}
+                                                </span>
+                                            </button>
+                                        );
+                                    })}
                                 </div>
+                                {availableSlots.length === 0 && (
+                                    <p className="discovery-no-slots">
+                                        No open times left for this day — pick another
+                                        date.
+                                    </p>
+                                )}
                             </div>
 
                             <div className="discovery-selected" aria-live="polite">
