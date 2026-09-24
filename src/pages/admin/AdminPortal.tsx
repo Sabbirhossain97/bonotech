@@ -266,6 +266,116 @@ export function AdminPortal() {
             </article>
           </section>
 
+          {overview.zoominfo ? (
+            <section className="admin-panel admin-panel-wide admin-zoominfo">
+              <div className="admin-zoominfo-head">
+                <div>
+                  <h2>ZoomInfo WebSights</h2>
+                  <p className="admin-muted admin-zoominfo-note">
+                    {overview.zoominfo.enrichmentNote}
+                  </p>
+                </div>
+                <a
+                  className="admin-ghost admin-zoominfo-link"
+                  href={overview.zoominfo.dashboardUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Open ZoomInfo
+                </a>
+              </div>
+
+              <div className="admin-zoominfo-status">
+                <div>
+                  <span>Script on site</span>
+                  <strong>
+                    {overview.zoominfo.scriptInstalled ? "Live" : "Missing"}
+                  </strong>
+                </div>
+                <div>
+                  <span>WebSights key</span>
+                  <strong>{overview.zoominfo.websightsKeyPreview || "—"}</strong>
+                </div>
+                <div>
+                  <span>API enrichment</span>
+                  <strong>
+                    {overview.zoominfo.enrichmentEnabled ? "Enabled" : "Not connected"}
+                  </strong>
+                </div>
+                <div>
+                  <span>Companies matched</span>
+                  <strong>{formatNumber(overview.zoominfo.matchedCompanyCount || 0)}</strong>
+                </div>
+              </div>
+
+              <p className="admin-muted">{overview.zoominfo.dashboardHint}</p>
+
+              <div className="admin-zoominfo-surfaces">
+                {overview.zoominfo.trackedSurfaces.map((url) => (
+                  <span key={url}>{url}</span>
+                ))}
+              </div>
+
+              <div className="admin-zoominfo-split">
+                <div>
+                  <h3>Top companies (enriched)</h3>
+                  {overview.zoominfo.matchedCompanies.length === 0 ? (
+                    <p className="admin-empty">
+                      {overview.zoominfo.apiConfigured
+                        ? "No company matches in this range yet."
+                        : "Connect ZoomInfo API credentials to pull company matches into this portal."}
+                    </p>
+                  ) : (
+                    <ul className="admin-rank">
+                      {overview.zoominfo.matchedCompanies.map((row) => (
+                        <li key={row.name}>
+                          <span title={[row.name, row.industry, row.country].filter(Boolean).join(" · ")}>
+                            {row.name}
+                            {row.country ? ` · ${row.country}` : ""}
+                          </span>
+                          <strong>{formatNumber(row.count)}</strong>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+                <div>
+                  <h3>Recent company visits</h3>
+                  {overview.zoominfo.recentMatches.length === 0 ? (
+                    <p className="admin-empty">
+                      Company-level visits currently live in ZoomInfo WebSights Analytics.
+                    </p>
+                  ) : (
+                    <div className="admin-table-wrap">
+                      <table className="admin-table">
+                        <thead>
+                          <tr>
+                            <th>When</th>
+                            <th>Company</th>
+                            <th>Detail</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {overview.zoominfo.recentMatches.map((row, index) => (
+                            <tr key={`${row.ts}-${row.name}-${index}`}>
+                              <td>{formatWhen(row.ts)}</td>
+                              <td>{row.name}</td>
+                              <td>
+                                {[row.industry, row.country, row.path]
+                                  .filter(Boolean)
+                                  .join(" · ") || "—"}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </section>
+          ) : null}
+
           <div className="admin-grid">
             <MiniBars data={overview.byDay} />
             <RankList

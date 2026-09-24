@@ -188,6 +188,35 @@ export type AnalyticsOverview = {
     label?: string;
     viewport?: string;
   }>;
+  zoominfo?: {
+    product: string;
+    scriptInstalled: boolean;
+    websightsKeyPreview: string | null;
+    trackedSurfaces: string[];
+    dashboardUrl: string;
+    dashboardHint: string;
+    apiConfigured: boolean;
+    enrichmentEnabled: boolean;
+    enrichmentNote: string;
+    matchedCompanyCount: number;
+    matchedCompanies: Array<{
+      name: string;
+      count: number;
+      website?: string;
+      industry?: string;
+      country?: string;
+      lastSeen?: string;
+    }>;
+    recentMatches: Array<{
+      ts: string;
+      name: string;
+      website?: string;
+      industry?: string;
+      country?: string;
+      path?: string;
+      employeeCount?: number;
+    }>;
+  };
 };
 
 export async function fetchAnalyticsOverview(

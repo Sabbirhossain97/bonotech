@@ -19,6 +19,8 @@ backend/.env
 # Newsletter + analytics stores (written by the mail API)
 backend/data/newsletter-subscribers.json
 backend/data/analytics-events.jsonl
+backend/data/zoominfo-matches.jsonl
+backend/data/zoominfo-ip-cache.json
 
 # Editor directories and files
 .vscode/*

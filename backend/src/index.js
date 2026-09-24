@@ -14,6 +14,11 @@ import {
   requireAdmin,
   verifyAdminLogin,
 } from "./adminAnalytics.js";
+import {
+  buildZoomInfoOverview,
+  getClientIp,
+  maybeEnrichVisitorIp,
+} from "./zoominfo.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = path.resolve(__dirname, "../data");
@@ -216,11 +221,24 @@ const adminLoginLimiter = rateLimit({
 
 app.post("/analytics/event", analyticsLimiter, async (req, res) => {
   try {
-    const result = await appendAnalyticsEvent(DATA_DIR, req.body ?? {});
+    const clientIp = getClientIp(req);
+    const result = await appendAnalyticsEvent(DATA_DIR, {
+      ...(req.body ?? {}),
+      clientIp,
+    });
     if (!result.ok) {
       res.status(400).json({ message: "Failed", error: result.error });
       return;
     }
+
+    // Resolve company visitors via ZoomInfo when API credentials are present.
+    if (result.event?.type === "session_start" || result.event?.type === "page_view") {
+      maybeEnrichVisitorIp(DATA_DIR, clientIp, {
+        sessionId: result.event.sessionId,
+        path: result.event.path,
+      });
+    }
+
     res.json({ message: "Success" });
   } catch (error) {
     console.error("[bonotech-mail-api] analytics write failed:", error);
@@ -246,7 +264,11 @@ app.get("/admin/analytics/overview", requireAdmin, async (req, res) => {
   try {
     const range = String(req.query?.range || "7d");
     const overview = await buildAnalyticsOverview(DATA_DIR, range);
-    res.json({ message: "Success", ...overview });
+    const sinceMs =
+      Date.now() -
+      (Number(String(overview.range).replace("d", "")) || 7) * 24 * 60 * 60 * 1000;
+    const zoominfo = await buildZoomInfoOverview(DATA_DIR, sinceMs);
+    res.json({ message: "Success", ...overview, zoominfo });
   } catch (error) {
     console.error("[bonotech-mail-api] analytics overview failed:", error);
     res.status(500).json({ message: "Failed" });

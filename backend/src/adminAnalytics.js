@@ -120,10 +120,16 @@ export async function appendAnalyticsEvent(dataDir, body) {
     return { ok: false, error: "Invalid analytics event." };
   }
 
+  // Keep raw IP only when ZoomInfo enrichment is enabled; never expose it in admin UI.
+  const clientIp = String(body?.clientIp || "").trim().slice(0, 64);
+  if (clientIp && process.env.ZOOMINFO_USERNAME && process.env.ZOOMINFO_PASSWORD) {
+    event.hasIp = true;
+  }
+
   await fs.mkdir(dataDir, { recursive: true });
   const file = path.join(dataDir, "analytics-events.jsonl");
   await fs.appendFile(file, `${JSON.stringify(event)}\n`, "utf8");
-  return { ok: true };
+  return { ok: true, event };
 }
 
 async function readEvents(dataDir, sinceMs) {
